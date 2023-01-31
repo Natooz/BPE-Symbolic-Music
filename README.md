@@ -1,6 +1,6 @@
 # Byte Pair Encoding for Symbolic Music
 
-Code of the paper *Byte Pair Encoding for Symbolic Music*.
+Code of the paper [*Byte Pair Encoding for Symbolic Music*](https://arxiv.org/abs/2301.11975).
 
 ## Steps to reproduce
 
