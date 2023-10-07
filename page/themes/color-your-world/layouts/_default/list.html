@@ -1,0 +1,34 @@
+{{ define "main" }}
+  
+  {{ $heading := (partial "basic-tags" .).heading }}
+
+  <!-- Collect pages using the "search" layout -->
+  {{ $searchPages := where .Site.RegularPages "Layout" "eq" "search" }}
+
+  <main class="list">
+
+    <!-- Display search form before listing posts -->
+    {{ if and .Site.Params.Search.enable (gt (len $searchPages) 0) (eq .Kind "section") }}
+      {{ partialCached "search-form" . .Layout }}
+    {{ end }}
+    
+    <h1>{{ $heading }}</h1>
+    
+    {{ if eq .Kind "taxonomy" }}
+      {{ if eq .Type "categories" }}
+        {{ partialCached "categories" . }}
+      {{ else if eq .Type "tags" }}
+        {{ partialCached "tags" . }}
+      {{ end }}
+    {{ else }}
+
+      {{ partial "post-list" . }}
+      {{ partial "pagination" . }}
+
+      {{ partialCached "tag-list" . }}
+
+    {{ end }}
+
+  </main>
+  
+{{ end }}

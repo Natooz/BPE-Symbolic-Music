@@ -11,16 +11,28 @@ from math import ceil
 from miditoolkit import MidiFile
 from tqdm import tqdm
 
-from exp_gen import datasets
-from constants import OCT_MAX_BAR
+from dataset import list_mmd_files_paths
+from constants import OCT_MAX_BAR, MIN_NB_NOTES
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
+    datasets = ["GiantMIDI", "POP909", "MMD"]
+
     for dataset in datasets:
-        midi_paths = list(Path('data', dataset).glob('**/*.mid'))
-        (merged_out_dir := Path('data', f'{dataset}-short')).mkdir(parents=True, exist_ok=True)
+        merged_out_dir = Path("data", f"{dataset}-short")
+        if merged_out_dir.exists():
+            continue
+        merged_out_dir.mkdir(parents=True, exist_ok=True)
+        if dataset == "MMD":
+            midi_paths = list_mmd_files_paths(
+                Path("data", "MMD_METADATA", "midi_audio_matches.json")
+            )
+        else:
+            midi_paths = list(Path("data", dataset).glob("**/*.mid"))
 
-        for i, midi_path in enumerate(tqdm(midi_paths, desc='PRE-PROCESSING FOR OCTUPLE')):
+        for i, midi_path in enumerate(
+            tqdm(midi_paths, desc="PRE-PROCESSING FOR OCTUPLE")
+        ):
             # Loads MIDI, merges and saves it
             midi = MidiFile(midi_path)
             ticks_per_cut = OCT_MAX_BAR * midi.ticks_per_beat * 4
@@ -29,7 +41,9 @@ if __name__ == '__main__':
                 continue
             midis = [deepcopy(midi) for _ in range(nb_cuts)]
 
-            for j, track in enumerate(midi.instruments):  # sort notes as they are not always sorted right
+            for j, track in enumerate(
+                midi.instruments
+            ):  # sort notes as they are not always sorted right
                 track.notes.sort(key=lambda x: x.start)
                 for midi_short in midis:  # clears notes from shorten MIDIs
                     midi_short.instruments[j].notes = []
@@ -42,4 +56,9 @@ if __name__ == '__main__':
 
             # Saving MIDIs
             for j, midi_short in enumerate(midis):
-                midi_short.dump(merged_out_dir / f'{midi_path.stem}_{j}.mid')
+                if (
+                    sum(len(track.notes) for track in midi_short.instruments)
+                    < MIN_NB_NOTES
+                ):
+                    continue
+                midi_short.dump(merged_out_dir / f"{midi_path.stem}_{j}.mid")

@@ -1,0 +1,5 @@
+<ul class="terms">
+  {{ range .Site.Taxonomies.tags }}
+    <li><a class="btn" href="{{ .Page.RelPermalink }}" title="{{ .Page.LinkTitle }} ({{ .Count }})">{{ .Page.LinkTitle }}<span>{{ .Count }}</span></a></li>
+  {{ end }}
+</ul>

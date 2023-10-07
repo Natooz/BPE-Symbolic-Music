@@ -1,0 +1,15 @@
+\begin{tabular}{lllllll}
+\toprule
+{} &     avg\_tpb TSD &    avg\_tpb REMI & tok\_time TSD & tok\_time REMI & detok\_time TSD & detok\_time REMI \\
+\midrule
+No BPE  &            43.3 &            51.8 &        0.122 &         0.133 &          0.025 &           0.038 \\
+BPE 1k  &  19.9 (-54.1\textbackslash \%) &  25.4 (-51.0\textbackslash \%) &        0.134 &          0.14 &          0.042 &           0.059 \\
+BPE 5k  &  14.5 (-66.5\textbackslash \%) &  19.3 (-62.8\textbackslash \%) &        0.135 &         0.141 &          0.042 &           0.059 \\
+BPE 10k &  12.8 (-70.4\textbackslash \%) &  17.5 (-66.3\textbackslash \%) &        0.135 &         0.141 &          0.041 &           0.059 \\
+BPE 20k &  11.5 (-73.5\textbackslash \%) &  15.9 (-69.3\textbackslash \%) &        0.135 &         0.142 &          0.041 &           0.058 \\
+PVm     &  33.1 (-23.5\textbackslash \%) &  41.5 (-19.9\textbackslash \%) &        0.106 &          0.12 &          0.021 &           0.026 \\
+PVDm    &  23.0 (-47.0\textbackslash \%) &  31.2 (-39.8\textbackslash \%) &        0.094 &         0.106 &          0.019 &           0.022 \\
+CP Word &             NaN &             NaN &          NaN &           NaN &            NaN &             NaN \\
+Octuple &             NaN &  10.3 (-80.1\textbackslash \%) &          NaN &         0.118 &            NaN &           0.026 \\
+\bottomrule
+\end{tabular}

@@ -1,0 +1,6 @@
+{{- $custom := .Site.Params.imageProcessing -}}
+{{- $default := .Site.Data.default.imageProcessing -}}
+
+{{- $imageProc := (dict "autoResize" ($custom.autoResize | default $default.autoResize) "fallbackOptions" ($custom.fallbackOptions | default $default.fallbackOptions) "openGraphFillOptions" ($custom.openGraphFillOptions | default $default.openGraphFillOptions) "twitterFillOptions" ($custom.twitterFillOptions | default $default.twitterFillOptions) "sizes" ($custom.sizes | default $default.sizes) "extraFormats" ($custom.extraFormats | default $default.extraFormats)) -}}
+
+{{- return $imageProc -}}

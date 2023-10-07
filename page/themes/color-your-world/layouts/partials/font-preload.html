@@ -1,0 +1,8 @@
+<!--
+  TODO
+  Add a better way to detect custom fonts (ignoring the default ones)
+-->
+
+{{- range (resources.Match "fonts/*") -}}
+  <link as="font" crossorigin="anonymous" href="{{ .RelPermalink }}" rel="preload">
+{{ end -}}

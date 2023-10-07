@@ -1,0 +1,1603 @@
+@charset 'utf-8';
+
+// Import base (variables and mixins), typography and general colors
+@import 'base/_all',
+        'fonts/_all',
+        'colors/variables';
+
+
+// Get transition for color changes
+$change-transition: {{ .Site.Params.Style.changeTransition | default .Site.Data.default.style.changeTransition }};
+
+
+
+html {
+  font-size: $font-size;
+  scroll-behavior: smooth;
+  
+  // Dark mode
+  &[data-mode='dark'] {
+    --bg: #{$dark-background};
+    --fg: #{$dark-foreground};
+    
+    --alt-bg: #{$dark-alt-background};
+    --alt-fg: #{$dark-alt-foreground};
+    
+    --dtl: #{$dark-details};
+    --err: #{$dark-error-color};
+
+    --bgmod: #{$dark-bg-modifier};
+
+    --input-bg: #{$dark-input-background};
+    --input-fg: #{$dark-input-foreground};
+    --input-bd: #{$dark-input-border};
+
+    --lpress: #{$dark-letterpress};
+    --rlpress: #{$light-letterpress};
+
+    // Lazy way to deter images that can be too bright
+    img:not([src$='.svg']) {
+      filter: $img-filter;
+    }
+    
+    // Custom Chroma stylesheet
+    {{ if .Site.Params.Style.useCustomChroma | default true }}
+
+      {{ if (fileExists "static/css/chroma/dark.css") }}
+        @import '/css/chroma/dark.css';
+      {{ else if (resources.Get "scss/colors/chroma/dark.scss") }}
+        @import 'colors/chroma/dark';
+      {{ end }}
+      
+    {{ end }}
+  }
+  
+  // Light mode
+  &[data-mode='light'] {
+    --bg: #{$light-background};
+    --fg: #{$light-foreground};
+    
+    --alt-bg: #{$light-alt-background};
+    --alt-fg: #{$light-alt-foreground};
+    
+    --dtl: #{$light-details};
+    --err: #{$light-error-color};
+    
+    --bgmod: #{$light-bg-modifier};
+
+    --input-bg: #{$light-input-background};
+    --input-fg: #{$light-input-foreground};
+    --input-bd: #{$light-input-border};
+
+    --lpress: #{$light-letterpress};
+    --rlpress: #{$dark-letterpress};
+
+    // Custom Chroma stylesheet
+    {{ if .Site.Params.Style.useCustomChroma | default true }}
+    
+      {{ if (fileExists "static/css/chroma/light.css") }}
+        @import '/css/chroma/light.css';
+      {{ else if (resources.Get "scss/colors/chroma/light.scss") }}
+        @import 'colors/chroma/light';
+      {{ end }}
+      
+    {{ end }}
+  }
+  
+  // RESPONSIVENESS
+  
+  // Margin for blockquote
+  --blk-mg: 1.05rem 0.75rem;
+  
+  // Padding for highlight
+  //--hl-pad: 15px 18px;
+  
+  --il-pad: 0 12px;
+  
+  // Padding for highlight with line numbers
+  //--lnhl-pad: 3px 18px;
+}
+
+
+
+body {
+  
+  // Some reset
+  margin: 0;
+  padding: 0;
+
+  font-family: $body-font;
+
+  a {
+    color: var(--accent);
+    
+    outline-offset: 2px;
+
+    transition:
+      opacity .2s ease-in-out,
+      outline-color .2s ease-in-out;
+
+    word-break: break-word;
+    
+    &:hover {
+      opacity: 0.75;
+    }
+  }
+  
+  background: var(--bg);
+  color: var(--fg);
+  
+  // Sticky footer
+  display: flex;
+  min-height: 100vh;
+  flex-direction: column;
+  
+  > header,
+  > footer {
+    background: var(--alt-bg);
+    color: var(--alt-fg);
+    
+    text-align: center;
+  }
+  
+  > header {
+
+    padding: 0 1.5rem 1rem;
+
+    nav {
+      margin: .5rem 0 0;
+      
+      ul {
+        margin: 0;
+        padding: 0;
+        
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        
+        a {
+          display: block;
+          
+          word-break: keep-all;
+          
+          margin: 0 7.5px 15px;
+          padding: 9px 21px 12px;
+
+          font-size: 0.75rem;
+          font-weight: $body-bold-weight;
+        }
+      }
+    }
+  }
+  
+  > footer {
+    padding: 1.5rem 3rem 1rem;
+    
+    p {
+      line-height: $body-line-height;
+      margin: .5rem 0;
+    }
+    
+    a {
+      transition:
+        opacity .2s ease-in-out,
+        outline-color $change-transition;
+
+      &:hover {
+        opacity: 0.75;
+      }
+    }
+    
+    div {
+      padding: 12px 0;
+
+      input {
+        @include chrome-border(1px, var(--fg));
+        outline-offset: 3px;
+        
+        padding: 0;
+        
+        &::-webkit-color-swatch {
+          border: none;
+        }
+        
+        &::-webkit-color-swatch-wrapper {
+          padding: 0;
+        }
+      }
+
+      button {
+        background: 0;
+        border: 0;
+        
+        padding: 3px 3px 0;
+        
+        svg {
+          fill: var(--fg);
+          
+          stroke: var(--lpress);
+          stroke-width: .6rem;
+        }
+      }
+      
+      input,
+      button {
+        margin: 0 7.5px;
+
+        transition:
+          outline-color .2s ease-in-out,
+          transform .2s ease-in-out;
+
+        &:hover {
+          transform: scale(1.2);
+        }
+        
+        // HACK
+        // Override Firefox unnecessary extra inner outline
+        &::-moz-focus-inner {
+          border: 0;
+        }
+      }
+      
+      input,
+      button svg {
+        @include squared(42px);
+      }
+    }
+  }
+}
+
+
+body a,
+.outline-dashed {
+  outline: 2px dashed transparent;
+
+  &:focus {
+    outline-color: var(--accent);
+  }
+}
+
+
+ol,
+ul {
+  list-style: none;
+}
+
+
+// Main heading
+h1 {
+  @include letterpress(var(--rlpress));
+}
+
+// Separator
+hr {
+  border: 1px solid var(--lpress);
+  margin: 2.4rem 0 1.2rem;
+}
+
+// Selection
+::selection {
+  background: var(--accent);
+  color: $selected-fg;
+  text-shadow: none;
+}
+
+// Sticky footer
+.filler {
+  flex: 1;
+
+  align-items: center;
+  justify-content: center;
+}
+
+
+article > header {
+  margin: 0 0 2rem; // White space
+  
+  h1 {
+    line-height: 3rem;
+    margin: .5rem 0; // White space
+  }
+  
+  img {
+    margin: 1rem 0 0;
+  }
+  
+  p {
+    font-size: .9rem;
+    font-style: italic;
+    
+    margin: 0; // White space
+  }
+}
+
+
+// Typography
+%heading-base {
+  font-family: $heading-font;
+  font-weight: $heading-weight;
+}
+
+@for $i from 1 through 6 {
+  h#{$i} {
+    @extend %heading-base;
+    
+    @include heading-scaling($i);
+  }
+}
+
+
+main {
+  p {
+    line-height: $body-line-height;
+  }
+}
+
+code {
+  font-family: $code-font;
+  
+  overflow-wrap: break-word;
+}
+
+
+// If there's no "custom/site-title" partial, style a default one
+{{ if not (templates.Exists "partials/custom/site-title.html") }}
+  body > header {
+    > a {
+      @extend %heading-base;
+      
+      transition:
+        color $change-transition,
+        opacity .2s ease-in-out,
+        outline-color $change-transition;
+      
+      @include heading-scaling(1);
+      @include letterpress(var(--rlpress));
+      
+      display: inline-block;
+      margin: 1.5rem 0 0.75rem;
+    }
+  }
+{{ end }}
+
+
+// WHITE SPACE
+article {
+  
+  @for $i from 2 through 6 {
+    h#{$i} {
+      margin: 1rem 0 ($body-line-height - 0.5rem); // or 2rem
+      
+      // Allow spacing when using anchor links
+      padding: 1rem 0 0;
+      
+      + p {
+        margin-top: 0;
+      }
+    }
+  }
+  
+  // Paragraph whitespace
+  > p {
+    margin: $body-line-height 0;
+  }
+}
+
+
+audio,
+img,
+video {
+  margin: 1.5rem auto;
+}
+
+
+
+
+
+
+
+
+$anchor-size: 24px;
+
+// ANCHOR LINKS
+.anchor {
+  float: right;
+  position: relative;
+  transform: none;
+  
+  margin: 0 0 0 1.5rem;
+
+  svg {
+    fill: var(--accent);
+    
+    vertical-align: middle;
+    
+    @include squared($anchor-size);
+  }
+}
+
+// Resize the anchor SVG depending on the heading level
+// Also minor spacing ajustment
+@for $i from 2 through 6 {
+  h#{$i} {
+    .anchor {
+      margin-right: (.25rem + .1 * (6 - $i));
+      outline-offset: 10px - ($i * 1.25);
+      
+      svg {
+        transform: scale(1 + .175 * (6 - $i));
+      }
+    }
+  }
+}
+
+@include respond-above($mobile-breakpoint + $anchor-size) {
+  .anchor {
+    position: absolute;
+    transform: translate(-150%);
+  }
+  
+  @for $i from 2 through 6 {
+    h#{$i} {
+      .anchor {
+        margin: 0 0 0 (.15rem - .1 * (6 - $i));
+      }
+    }
+  }
+}
+
+
+// Avoid accidental selection
+label,
+summary,
+.footnote-ref,
+.lnt {
+  user-select: none;
+}
+
+
+// Lists in general
+nav#TableOfContents,
+article ol,
+article ul {
+  li {
+    &:first-of-type {
+      margin-top: .3rem;
+    }
+  }
+  
+  li {
+    &:not(:last-of-type),
+    ul li:first-of-type,
+    ol li:first-of-type {
+      margin-bottom: .3rem;
+    }
+  }
+}
+
+
+ol li > p,
+ul li > p {
+  margin: 0;
+  display: inline-block;
+}
+
+
+
+ol {
+  counter-reset: n;
+  
+  & > li {
+    counter-increment: n;
+
+    &::before {
+      content: counter(n) '';
+      //content: counters(n, '.') ''; // Doesn't seem to work well with mixed nested lists (ul + ol)
+      
+      font-family: $code-font;
+      font-size: .85rem;
+      font-weight: $body-bold-weight;
+
+      @include letterpress(var(--lpress));
+
+      border: 1px solid var(--lpress);
+      color: var(--bg);
+
+      padding: 3px 7.5px 2px; // padding: 2px 7.5px;
+    }
+  }
+}
+
+li::before {
+  margin-right: 12px;
+
+  background: var(--fg);
+  border-radius: $border-radius;
+}
+
+
+
+
+
+// FOOTNOTES
+.footnotes {
+  border-top: 2px solid var(--fg);
+  
+  // HACK
+  // Some problem caused by flex?
+  display: block;
+  
+  margin-top: 2.4rem;
+  padding: 1rem 0 1.5rem;
+  
+  h2 {
+    margin: 0 0 2rem;
+  }
+  
+  a {
+    word-break: break-word;
+  }
+  
+  ol li p:first-of-type {
+    display: inline;
+
+    // HACK
+    // This should be useless out of development if using minification (that should strip the white space)
+    {{ if .Site.IsServer }}
+      margin-left: -6px;
+    {{ end }}
+  }
+  
+  // HACK
+  // The default "↩" symbol will be rendered differently in
+  // different browsers and platforms
+  // Solved right now by replacing the "↩" symbol with a
+  // SVG (or plain text if it's the user wish)
+  .footnote-backref {
+    margin: 0 0 0 9px;
+    
+    {{ if .Site.Params.Style.hasIconAsFootnoteReturnLink }}
+      
+      padding: 0 9px;
+      vertical-align: middle;
+      
+      svg {
+        fill: var(--dtl);
+        
+        stroke: var(--lpress);
+        stroke-width: .6rem;
+        
+        @include squared(18px);
+      }
+    
+    {{ else }}
+    
+      padding: 0 15px 4.5px;
+      vertical-align: top;
+      
+      font-size: 0.75rem;
+      text-transform: lowercase;
+      
+      word-break: break-word;
+    
+    {{ end }}
+  }
+
+  // HACK
+  // Ignore the default (markdown-generated) separator before footnotes
+  hr {
+    display: none;
+  }
+}
+
+// Trying something Wikipedia-like
+sup {
+  line-height: 0;
+
+  .footnote-ref {
+    text-decoration: none;
+    
+    &::before {
+      content: '[';
+    }
+
+    &::after {
+      content: ']';
+    }
+  }
+}
+
+
+// For mode change animation
+code,
+.chroma {
+  transition:
+    background-color $change-transition,
+    color $change-transition;
+}
+
+
+article > pre,
+.scroll,
+.katex-display,
+.highlight > pre,
+.highlight > div {
+
+  overflow-x: auto;
+  
+  transition:
+    background-color $change-transition,
+    color $change-transition,
+    outline-color .3s ease;
+  
+  outline: 3px solid transparent;
+  
+  &:focus {
+    outline-color: var(--accent);
+  }
+
+  @extend %webkit-scrollbar;
+  @extend %moz-scrollbar;
+}
+
+
+// TABLE
+.scroll {
+  
+  border: 1px solid var(--fg);
+  
+  & > table {
+    border-collapse: collapse;
+    color: var(--fg);
+    
+    font-family: $body-font;
+
+    min-width: 600px;
+    width: 100%;
+
+    td + td {
+      border-left: 1px solid var(--fg);
+    }
+        
+    tr + tr {
+      border-top: 1px solid var(--fg);
+    }
+
+    /*
+    tr:not(:first-child):last-of-type {
+      border-bottom: 1px solid var(--fg);
+    }
+    */
+
+    td,
+    th {
+      padding: 9px;
+    }
+    
+    th {
+      background: var(--fg);
+      color: var(--bg);
+    }
+
+    tbody tr {
+      transition:
+        background .2s ease-in-out,
+        color .2s ease-in-out;
+      
+      &:nth-child(even) {
+        background: var(--alt-bg);
+      }
+      
+      &:nth-child(odd) { 
+        background: var(--bg);
+      }
+      
+      &:hover {
+        background: var(--accent);
+        color: var(--dtl);
+        
+        a {
+          color: var(--dtl);
+        }
+        
+        ::selection {
+          background: $selected-fg;
+          color: var(--accent);
+        }
+      }
+    }
+  }
+}
+
+
+.highlight > div table {
+  //padding: var(--lnhl-pad); // 0 24px;
+  max-height: $box-max-height;
+}
+
+.chroma td:first-of-type {
+  padding: 0 18px 0 0;
+}
+
+article > pre,
+.katex-display,
+.highlight > pre {
+  //padding: var(--hl-pad);
+  padding: 1rem 1.5rem;
+}
+
+article > pre,
+.katex-display,
+.highlight > pre,
+.highlight > .chroma {
+  border: 1px solid $box-border;
+
+  line-height: $body-line-height;
+  max-height: $box-max-height;
+}
+
+
+mark,
+p code,
+li code {
+  border-radius: 2px;
+  padding: 0 3px;
+}
+
+li a {
+  word-break: break-all;
+}
+
+
+article > header {
+  .terms {
+    
+    margin: .9rem 0 .6rem;
+    
+    ul {
+      padding: 0;
+    }
+    
+    li {
+      display: inline;
+    }
+
+    a {
+      display: inline-block;
+      
+      margin: 0 7.5px 9px 0;
+      padding: 6px 15px 9px;
+    }
+  }
+}
+
+
+
+.posts {
+  padding: 0;
+  
+  li {
+    margin: .5rem 0;
+  }
+  
+  a {
+    background: var(--accent);
+    color: var(--dtl);
+
+    display: flex;
+    flex-direction: column-reverse;
+    
+    margin: 15px auto;
+    padding: 15px 30px 18px;
+    
+    text-decoration: none;
+    
+    word-break: break-word;
+
+    p {
+      flex: 1;
+      margin: 0;
+    }
+    
+    time {
+      // HACK
+      // Using a background-image as an overlay...
+      background-image:
+        linear-gradient(
+          0deg, var(--bgmod),
+          100%, transparent
+        );
+      
+      border-radius: $border-radius;
+      
+      font-size: .85rem;
+      
+      margin: .3rem 0;
+      //margin-left: 1.8rem;
+      padding: 0 9px 2px;
+    }
+  }
+}
+
+
+
+.katex-display {
+  border: 1px dashed var(--alt-fg);
+  
+  overflow-x: auto;
+  padding: 15px 30px;
+  
+  &:focus {
+    border: 1px solid $box-border;
+  }
+}
+
+
+
+
+// MEDIA
+img,
+figure,
+video {
+  width: auto;
+  height: auto;
+}
+
+img {
+  display: block;
+  
+  max-width: calc(100% - 2px);
+  
+  outline: 3px solid transparent;
+  
+  transition:
+    border-color $change-transition,
+    outline-color .3s ease,
+    filter $change-transition;
+
+  &.cover {
+    @include chrome-border(1px, var(--fg));
+    
+    object-fit: cover;
+    width: calc(100% - 2px);
+  }
+  
+  &:not([src$='.svg']) {
+    max-height: $box-max-height;
+  }
+}
+
+/*
+article p > img {
+  display: block;
+  margin: 2rem auto;
+  max-width: calc(100% - 2px);
+}
+*/
+
+figure {
+  margin: 1.5rem auto;
+  
+  img {
+    display: block;
+    margin: 0 auto;
+  }
+  
+  figcaption {
+    font-size: .85rem;
+    text-align: center;
+    
+    margin: 0.75rem;
+    line-height: 1.25rem;
+  }
+}
+
+video {
+  display: block;
+  
+  max-width: calc(100% - 2px);
+  max-height: $box-max-height;
+
+  outline: 3px solid transparent;
+  
+  transition:
+    border-color $change-transition,
+    outline-color .3s ease;
+  
+  &:focus,
+  &:hover {
+    border-color: var(--accent);
+    outline-color: var(--accent);
+  }
+}
+
+audio {
+  display: block;
+  width: 90%;
+}
+
+img,
+video {
+  &.border {
+    @include chrome-border(1px, var(--fg));
+  }
+
+  // NOTE
+  // Can be used to override the previous rule
+  &.borderless {
+    border: 0;
+  }
+}
+
+
+
+// Table of Contents
+.toc {
+  
+  background: var(--alt-bg);
+  color: var(--dtl);
+
+  transition:
+    background-color $change-transition,
+    border $change-transition,
+    linear-gradient $change-transition;
+    
+  summary {
+    background: var(--accent);
+    border: 1px solid rgba(0,0,0,.3);
+    border-radius: $border-radius;
+
+    outline-offset: 2px;
+    
+    padding: 15px 30px 18.5px;
+    
+    @extend %heading-base;
+
+    @include button-like;
+    @include letterpress(var(--lpress));
+
+    transition:
+      color $change-transition,
+      opacity .2s ease,
+      outline-color .3s ease,
+      padding .2s ease;
+    
+    &:hover {
+      opacity: 0.75;
+    }
+  }
+  
+  &[open] summary {
+    border-radius: $border-radius $border-radius 0 0;
+    
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.2);
+    
+    padding: 15px 30px;
+
+    ~ * {
+      animation: smoothReveal .3s ease-in-out;
+    }
+  }
+
+  nav#TableOfContents {
+    
+    border-style: solid;
+    border-color: rgba(0,0,0,.3);
+    border-width: 0 1px 1px;
+    
+    border-radius: 0 0 $border-radius $border-radius;
+    
+    box-shadow: inset 0 -1px 0 rgba(0,0,0,.3);
+  
+    padding: 6px 15px 15px 9px;
+
+  }
+}
+
+#TableOfContents,
+.footnotes ol,
+article > ul,
+article > ol {
+  line-height: $body-line-height;
+}
+
+#TableOfContents > ol,
+#TableOfContents > ul,
+.footnotes > ol {
+  padding-left: 24px;
+}
+
+article ol,
+article ul {
+  padding-inline-start: 1rem;
+}
+
+#TableOfContents ul,
+article > ol ul,
+article > ul,
+article > ul ul {
+
+  & > li::before {
+    content: '';
+
+    @include squared(18px);
+    
+    display: inline-block;
+    
+    // HACK
+    // Cheap vertical align
+    margin-bottom: -3px;
+  }
+}
+
+
+
+// Animation
+@keyframes smoothReveal {
+  0%    { opacity: 0; }
+  100%  { opacity: 1; }
+}
+
+
+
+// BUTTONS
+.btn,
+.footnote-backref,
+input[type=submit] {
+  background: var(--accent);
+  border: 1px solid rgba(0,0,0,.3);
+  border-radius: $border-radius;
+  color: var(--dtl);
+  
+  text-decoration: none;
+  
+  transition:
+    background-color $change-transition,
+    color $change-transition,
+    opacity .2s ease-in-out,
+    outline-color .3s ease;
+
+  @include button-like;
+  @include letterpress(var(--lpress));
+  
+  &:hover {
+    opacity: 0.75;
+  }
+}
+
+button,
+input[type=color],
+input[type=submit],
+summary {
+  cursor: pointer;
+}
+
+
+
+// Categories
+{{ if .Site.Taxonomies.categories }}
+  .category a {
+    font-weight: bold;
+  }
+{{ end }}
+
+
+
+.terms {
+  display: flex;
+  flex-wrap: wrap;
+
+  padding: 0;
+
+  a {
+    display: flex;
+    flex: 1;
+    
+    align-items: center;
+    
+    margin: 0 9px 9px 0;
+    padding: 7.5px 18px 10.5px;
+    
+    word-break: keep-all;
+    
+    span {
+      background-image:
+        linear-gradient(
+          0deg, var(--bgmod),
+          100%, transparent
+        );
+      
+      border-radius: $border-radius;
+      
+      margin-left: .45rem;
+      padding: 0 6px 1px;
+      
+      font-size: .85rem;
+    }
+  }
+}
+
+
+
+.pagination { 
+  font-family: $body-font;
+  font-weight: $body-bold-weight;
+  text-align: center;
+  
+  margin: 3rem auto 1rem;
+  padding: 0;
+
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  
+  li {
+    display: inline-block;
+    
+    transition:
+      background .2s ease-in-out,
+      border .2s ease-in-out;
+
+    a,
+    &.current p {
+      display: block;
+      margin: 0 9px 9px 0;
+      padding: 7.5px 12px 10.5px;
+      
+      width: 21px;
+    }
+    
+    a {
+      color: var(--dtl);
+    }
+    
+    &.current p {
+      background: var(--alt-bg);
+      border: 1px solid rgba(0,0,0,.45);
+      border-radius: $border-radius;
+      color: var(--alt-fg);
+      
+      line-height: inherit;
+      
+      user-select: none;
+
+      @include button-like;
+      @include letterpress(var(--lpress));
+    }
+  }
+  
+  svg {
+    display: inline-block;
+    
+    fill: currentColor;
+
+    @include squared(18px);
+
+    // HACK
+    // Cheap vertical align
+    margin: auto auto -2px;
+  }
+}
+
+
+
+
+.label-form {
+  margin-top: 1rem;
+  
+  font-size: .9rem;
+  
+  letter-spacing: .5px;
+  text-transform: uppercase;
+  
+  @extend %heading-base;
+}
+
+.input-text {
+  background: var(--input-bg);
+  border: 1px solid var(--input-bd);
+  color: var(--input-fg);
+  font-family: $body-font;
+  font-size: .9rem;
+  line-height: $body-line-height;
+  
+  transition:
+    background-color $change-transition,
+    border $change-transition,
+    outline-color .2s ease-in-out;
+  
+  outline: 2px solid transparent;
+  
+  &:focus {
+    outline-color: var(--accent);
+  }
+}
+
+
+
+
+// SEARCH
+.search-box {
+
+  form {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: stretch;
+  }
+  
+  label {
+    flex-basis: 100%;
+    line-height: 2rem;
+  }
+
+  input[name=q] {
+    min-width: 210px; // Override, not the best solution
+    padding: 6px 12px;
+    flex: 1;
+
+    border-radius: $border-radius 0 0 $border-radius;
+  }
+  
+  button {
+    border-radius: 0 $border-radius $border-radius 0;
+    
+    padding: 6px 30px;
+    
+    outline-offset: 2px;
+
+    svg {
+      @include squared(15px);
+      
+      fill: currentColor;
+      stroke: var(--lpress);
+      stroke-width: 9px;
+    }
+  }
+}
+
+#search-info {
+  margin: 1rem 0 2rem;
+
+  + ul {
+    margin: 0 0 6rem;
+  }
+}
+
+.social {
+  
+  margin: 1.5rem 0;
+  
+  {{ if .Site.Params.Style.socialIsFlex }}
+  
+    display: flex;
+    flex-wrap: wrap;
+    
+  {{ else }}
+  
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+
+  {{ end }}
+  
+  a {
+    display: flex;
+    
+    {{ if .Site.Params.Style.socialIsFlex }}
+      flex: 1;
+    {{ end }}
+    
+    align-items: center;
+    
+    margin: 0 9px 9px 0;
+    min-width: 150px;
+    padding: 15px 21px;
+    
+    text-align: center;
+
+    svg {
+      fill: currentColor;
+      
+      stroke: var(--lpress);
+      stroke-width: 9px;
+      
+      @include squared(36px);
+    }
+    
+    p {
+      flex: 1;
+      
+      margin: 0 12px;
+      
+      font-size: 0.75rem;
+      font-weight: bold;
+      text-transform: uppercase;
+      
+      line-height: 1rem;
+    }
+    
+    &:hover {
+      opacity: 0.75;
+    }
+  }
+}
+
+
+// CONTACT FORM
+#contact {
+
+  margin: 1.5rem 0;
+
+  label {
+    display: block;
+    line-height: 1.5rem;
+  }
+
+  input[name=name],
+  input[name=_replyto],
+  input[name=_subject],
+  select,
+  textarea {
+    display: block;
+    
+    margin: 3px 0;
+    max-width: 100%;
+  }
+  
+  input[name=name],
+  input[name=_replyto],
+  input[name=_subject] {
+    min-width: 240px;
+    padding: 6px 12px;
+  }
+  
+  select {
+    min-width: 210px;
+    padding: 6px;
+  }
+  
+  textarea {
+    padding: 9px 15px;
+    
+    width: 90%;
+    height: auto;
+  }
+
+  input[type=submit] {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: .05rem;
+    
+    margin-top: 1.2rem;
+    padding: 12px 42px 15px;
+    
+    outline-offset: 2px;
+
+    transition:
+      background-color $change-transition,
+      border .2s ease-in-out,
+      color $change-transition,
+      outline-color .2s ease-in-out,
+      opacity .2s ease-in-out;
+    
+    @extend %heading-base;
+
+    // HACK
+    // Override Firefox unnecessary extra inner outline
+    &::-moz-focus-inner {
+      border: 0;
+    }
+  }
+}
+
+// HACK
+// Override Firefox unnecessary extra inner outline
+// https://stackoverflow.com/a/11603104
+// https://stackoverflow.com/a/52903457
+@supports (-moz-appearance: meterbar) {
+  #contact select {
+    color: var(--fg);
+    color: rgba(0,0,0,0);
+    text-shadow: 0 0 0 var(--fg);
+  }
+}
+
+
+
+.error {
+  color: var(--err);
+}
+
+mark {
+  background: var(--accent);
+  
+  // TODO
+  // Not a11y enough
+  filter:
+    contrast(1.2)
+    invert(1);
+}
+
+// BUG
+// For some reason, the default "dotted" rendering seems broken in Chrome
+abbr {
+  text-decoration-style: solid;
+}
+
+blockquote {
+  background: var(--alt-bg);
+  border-style: solid;
+  border-width: 1px 1px 1px 12px;
+  color: var(--alt-fg);
+
+  margin: var(--blk-mg);
+  padding: 0 30px;
+  
+  p {
+    margin: 1.2rem 0;
+  }
+}
+
+kbd {
+  background-color: #eee;
+  border: 1px solid #b4b4b4;
+  border-radius: $border-radius;
+  
+  box-shadow:
+    0 1px 1px rgba(0, 0, 0, .2),
+    0 2px 0 0 rgba(255, 255, 255, .7) inset;
+
+  color: #333;
+  display: inline-block;
+  font-size: .85em;
+  font-weight: $body-bold-weight;
+  line-height: 1;
+  padding: 2px;
+  white-space: nowrap;
+  
+  > kbd {
+    margin: 0 2px;
+  }
+}
+
+
+// RESPONSIVENESS
+main {
+  margin: 90px auto;
+  padding: 0 15px;
+  
+  max-width: 660px;
+}
+
+article {
+  margin: 90px auto 120px;
+}
+
+// If not in mobile
+@include respond-above($mobile-breakpoint) {
+  html {
+    --blk-mg: 2.1rem 1.5rem;
+    //--hl-pad: 18px 24px; // 21px 24px;
+    
+    //--lnhl-pad: 6px 24px;
+  }
+  
+  // Not sure if I like this
+  .posts a {
+    flex-direction: unset;
+    
+    align-items: center;
+    
+    time {
+      margin: 0 0 0 1.5rem;
+    }
+  }
+  
+  .footnotes {
+    padding: 1rem .5rem 1.5rem;
+  }
+  
+  {{ if .Site.Params.Style.hideAnchors }}
+    a.anchor:not(:focus) {
+      opacity: 0;
+    }
+    
+    %visible {
+      opacity: 1;
+    }
+    
+    @for $i from 2 through 6 {
+      h#{$i} > a:focus + a.anchor,
+      h#{$i}:hover > a.anchor {
+        @extend %visible;
+      }
+    }
+  {{ end }}
+}
+
+
+{{ if .Site.Params.hasNoscriptNotice }}
+  .noscript {
+    font-weight: bold;
+  }
+{{ end }}
+
+
+
+// Non-standard
+%webkit-scrollbar {
+  &::-webkit-scrollbar {
+    @include squared(12px);
+  }
+  
+  &::-webkit-scrollbar-track {
+    background: var(--input-bg);
+    
+    &:horizontal {
+      border-top: 1px solid var(--input-bd);
+    }
+    
+    &:vertical {
+      border-left: 1px solid var(--input-bd);
+    }
+  }
+  
+  &::-webkit-scrollbar-thumb {
+    background: var(--accent);
+    border: 1px solid rgba(0,0,0,.3);
+  }
+  
+  &::-webkit-scrollbar-corner {
+    background: var(--input-bg);
+    
+    border-color: var(--input-bd);
+    border-style: solid;
+    border-width: 1px 0 0 1px;
+  }
+}
+
+// Non-standard
+%moz-scrollbar {
+  scrollbar-color: var(--accent) var(--input-bg);
+}
+
+
+// "Honeypot"
+input[name="_gotcha"] {
+  display: none;
+}
+
+
+// Definition list
+dt {
+  font-weight: $heading-weight;
+  font-style: italic;
+}
+
+dd {
+  margin: 0 1.5rem 1rem;
+}
+
+dt,
+dd {
+  line-height: $body-line-height;
+}
+
+
+
+// Rich Content
+{{ if (fileExists "static/css/rich-content.css") }}
+  @import '/css/rich-content.css';
+{{ else if (resources.Get "scss/rich-content.scss") }}
+  @import 'rich-content';
+{{ end }}
+
+
+// TODO
+// Custom user stuff
+// This isn't good enough
+{{ if (fileExists "static/css/custom.css") }}
+  @import '/css/custom.css';
+{{ else if (resources.Get "scss/custom.scss") }}
+  @import 'custom';
+{{ end }}

@@ -2,3 +2,8 @@ from .REMI_PVm import REMIPVm
 from .REMI_PVDm import REMIPVDm
 from .TSD_PVm import TSDPVm
 from .TSD_PVDm import TSDPVDm
+from .REMIPlus_PVm import REMIPlusPVm
+from .REMIPlus_PVDm import REMIPlusPVDm
+from .TSDPlus import TSDPlus
+from .TSDPlus_PVm import TSDPlusPVm
+from .TSDPlus_PVDm import TSDPlusPVDm

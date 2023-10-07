@@ -1,0 +1,48 @@
+// Here only as a kickstart
+
+$twitter-color: #1da0f1;
+
+
+
+blockquote.twitter-tweet {
+  border-color: $twitter-color;
+  padding: 0 30px 27px;
+}
+
+h2#vimeo-simple-shortcode {
+  margin-bottom: 1rem;
+}
+
+div.s_video_simple {
+  margin: 0 auto;
+  width: 96%;
+
+  a {
+    border: 1px solid var(--fg);
+    
+    display: block;
+    margin: 6px;
+    
+    line-height: 0;
+    
+    &:hover {
+      opacity: .75;
+    }
+  }
+}
+
+section.youtube {
+  border: 1px solid var(--fg);
+  
+  margin: 2rem 0;
+  padding-bottom: 56.25%;
+  position: relative;
+  overflow: hidden;
+  
+  height: 0;
+}
+
+section.info img {
+  border: 3px solid var(--fg);
+  border-radius: 9px;
+}

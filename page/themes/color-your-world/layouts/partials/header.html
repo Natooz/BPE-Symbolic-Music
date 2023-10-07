@@ -1,0 +1,21 @@
+<!-- Custom or default site title -->
+{{ if (templates.Exists "partials/custom/site-title.html") }}
+  {{ partial "custom/site-title" . }}
+{{ else }}
+  <a href="{{ .Site.BaseURL | relLangURL }}">{{ .Site.Title }}</a>
+{{ end }}
+
+<!-- Menu -->
+{{ if .Site.Menus.main }}
+  {{ with .Site.Menus.main }}
+    <nav aria-label="{{ T "ariaMainMenu" }}">
+      <ul>
+        {{ range . }}
+          <li>
+            <a class="btn" href="{{ .URL | relLangURL }}">{{ .Name }}</a>
+          </li>
+        {{ end }}
+      </ul>
+    </nav>
+  {{ end }}
+{{ end }}

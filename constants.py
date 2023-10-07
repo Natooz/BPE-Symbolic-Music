@@ -1,86 +1,128 @@
 """
 Constants file
 """
+from miditok.constants import INSTRUMENT_CLASSES
+from torch.cuda import is_available as cuda_available
+from torch.backends.mps import is_available as mps_available
+
+
 SEED = 444
+
+# For MMD preprocessing
+MMD_VALID_PROGRAMS = list(range(-1, 48)) + list(range(56, 95))  # programs to keep in the first place (no Ensemble)
+MMD_MIDI_CATS_TO_MERGE = list(range(12)) + [16]  # all but effects, and drums
+MMD_PROGRAMS_TO_MERGE = [p for cat in MMD_MIDI_CATS_TO_MERGE for p in INSTRUMENT_CLASSES[cat]['program_range']]
+PROGRAMS = [INSTRUMENT_CLASSES[cat]['program_range'].start for cat in range(len(INSTRUMENT_CLASSES)) if cat in
+            MMD_MIDI_CATS_TO_MERGE] + [p for p in MMD_VALID_PROGRAMS if p not in MMD_PROGRAMS_TO_MERGE]
+MMD_NB_GENRES = 40
+MMD_NB_ARTISTS = 100
 
 # Tokenizer params (same as MidiTok expect for new constants)
 PITCH_RANGE = range(21, 109)
 BEAT_RES = {(0, 1): 8, (1, 2): 4, (2, 4): 2, (4, 8): 1}
-NB_VELOCITIES = 8
+NB_VELOCITIES = 16
 ADDITIONAL_TOKENS = {'Chord': False, 'Rest': False, 'Tempo': False, 'Program': False, 'TimeSignature': False,
-                     'rest_range': (2, 8), 'nb_tempos': 32, 'tempo_range': (40, 250), 'time_signature_range': (8, 2)}
+                     'rest_range': (2, 8), 'nb_tempos': 32, 'tempo_range': (40, 250), 'time_signature_range': (8, 2),
+                     "programs": PROGRAMS}
+SPECIAL_TOKENS = ["PAD", "MASK", "BOS", "EOS", "SEP"]
 TOKENIZER_PARAMS = {'pitch_range': PITCH_RANGE, 'beat_res': BEAT_RES, 'nb_velocities': NB_VELOCITIES,
-                    'additional_tokens': ADDITIONAL_TOKENS, 'sos_eos': True}
+                    'additional_tokens': ADDITIONAL_TOKENS, "special_tokens": SPECIAL_TOKENS}
 TIME_DIVISION = 384
-NB_SCALES_OFFSET_DATA_AUGMENTATION = 2
-BPE_NB_FILES_LIM = 1500
+DATA_AUGMENTATION_OFFSETS = (2, 1, 0)
+BPE_VOCAB_SIZES = [1000, 5000, 10000, 20000]
+TOKENIZATIONS = ["TSD", "REMI"]
 
-# For classification
-MAX_NB_COMPOSERS = 10
-
-# Transformer config (for generator)
+# Transformer config (for all models)
 DIM = 512
 NB_HEADS = 8
-D_FFWD = 2048
-NB_LAYERS = 10
+D_FFWD = DIM * 4
+NB_LAYERS = 12
 NB_POS_ENC_PARAMS = 2048  # params for positional encoding positions
+TINY_DIM = 32  # for tiny transformer baseline
 
-# Transformer config (for classifier)
-CLA_DIM = 768
-CLA_NB_HEADS = 12
-CLA_D_FFWD = 2048
-CLA_NB_LAYERS = 10
-CLA_NB_POS_ENC_PARAMS = 2048  # params for positional encoding positions
-CLA_LARGE_DIM = 1024
-CLA_LARGE_NB_HEADS = 16
-CLA_LARGE_D_FFWD = 3072
-CLA_LARGE_NB_LAYERS = 18
-CLA_LARGE_NB_POS_ENC_PARAMS = 2048  # params for positional encoding positions
-
-
-# Training params
+# COMMON TRAINING PARAMS
 DROPOUT = 0.1
-BATCH_SIZE = 16
+BATCH_SIZE = 64
 GRAD_ACC_STEPS = 1
+EVAL_ACCUMULATION_STEPS = None  # to use in case of CUDA OOM during eval
 WEIGHT_DECAY = 0.01
 GRADIENT_CLIP_NORM = 3.0
 LABEL_SMOOTHING = 0.0
-LEARNING_RATE = 5e-6
-WARMUP_RATIO = 0.3
-VALID_SPLIT = 0.35
-TEST_SPLIT = 0.15  # unused
+VALID_SPLIT = 0.10
+TEST_SPLIT = 0.15
 USE_CUDA = True
+USE_MPS = False
 USE_AMP = True
+TORCH_COMPILE = False
+TORCH_COMPILE_BACKEND = None  # default to "inductor"
+TORCH_COMPILE_MODE = None
+USE_GRADIENT_CHECKPOINTING = True
+DDP_FIND_UNUSED_PARAMETERS = False
+DDP_BUCKET_CAP_MB = None  # default to 25mb
 TRAINING_STEPS = 100000
-EARLY_STOP_STEPS = 15000  # nb of steps to stop training if no increase of valid loss
-ITERATOR_KWARGS = {'early_stop_steps': EARLY_STOP_STEPS}
-VALID_INTVL = 30
-NB_VALID_STEPS = 5
-LOG_INTVL = 10
-MIN_SEQ_LEN = 384
-MAX_SEQ_LEN = 460
+VALID_INTVL = 1000
+LOG_STEPS_INTVL = 20
+SAVE_STEPS = 1000
+SAVE_TOTAL_LIMIT = 1
 
-# GEN TEST PARAMS
-NB_INFERENCES_TEST = 1024
-MAX_SEQ_LEN_TEST = 1024
-BATCH_SIZE_TEST = 32
+# TRAINING PARAMS GEN
+BATCH_SIZE_GEN = BATCH_SIZE
+MIN_SEQ_LEN_GEN = 256
+MAX_SEQ_LEN_GEN = 384
+TRAINING_STEPS_GEN = TRAINING_STEPS
+LEARNING_RATE_GEN = 1e-4
+LR_SCHEDULER_GEN = 'cosine_with_restarts'
+WARMUP_RATIO_GEN = 0.3
+VALID_SPLIT_GEN = 0.02
+TEST_SPLIT_GEN = 0.10
+
+# TRAINING PARAMS PRETRAINING
+BATCH_SIZE_PT = BATCH_SIZE
+MIN_SEQ_LEN_PT = 256
+MAX_SEQ_LEN_PT = 384
+TRAINING_STEPS_PT = TRAINING_STEPS
+LEARNING_RATE_PT = 1e-4
+MASK_RATIO_CLA_PT = 0.15
+LR_SCHEDULER_PT = 'cosine_with_restarts'
+WARMUP_RATIO_PT = 0.3
+
+# TRAINING PARAMS CLA FT
+BATCH_SIZE_CLA_FT = BATCH_SIZE
+MIN_SEQ_LEN_CLA_FT = 256
+MAX_SEQ_LEN_CLA_FT = 384
+TRAINING_STEPS_CLA_FT = 30000
+LEARNING_RATE_CLA_FT = 3e-5
+LR_SCHEDULER_CLA = 'cosine_with_restarts'
+WARMUP_RATIO_CLA = 0.3
+
+# TEST PARAMS GEN
+NB_INFERENCES_GEN = 512
+MIN_SEQ_LEN_TEST_GEN = 256
+MAX_SEQ_LEN_TEST_GEN = 384
+BATCH_SIZE_TEST_GEN = 96
 NUM_BEAMS = 1  # in practice the generation will use a batch size = BATCH_SIZE_TEST * NUM_BEAMS
-TOP_P = 0.9
+TEMPERATURE_SAMPLING = 2.5
+TOP_K = 15
+TOP_P = 0.95
+EPSILON_CUTOFF = None
+ETA_CUTOFF = None
+NB_BEATS_PROMPT_GEN = 16
+NB_BEATS_CONTINUATION_MAX = 16 * 4
+MIN_NB_NOTES_PROMPT_GEN = 10
 
-# TRAINING PARAMS DIS / CLA
-CLA_PRE_TRAINING_STEPS = 60000
-CLA_TRAINING_STEPS = 100000
-CLA_BATCH_SIZE = 24
-CLA_LARGE_BATCH_SIZE = 24
-CLA_PT_LEARNING_RATE = 1e-6
-CLA_FT_LEARNING_RATE = 5e-7
-CLA_EARLY_STOP = 25000
-RANDOM_RATIO_RANGE = (0.01, 0.15)
+# TEST PARAMS CLA
+MIN_SEQ_LEN_TEST_CLA = 256
+MAX_SEQ_LEN_TEST_CLA = 384
+BATCH_SIZE_TEST_CLA = 96
 
 # For CP Word and Octuple
-EMBED_SIZES_CP = [32, 64, 512, 128, 128]  # fam, pos / bar, pitch, vel, dur
-EMBED_SIZES_OCTUPLE = [512] * 5  # pitch, vel, dur, pos, bar
+EMBED_POOLING_SIZE = 24
+MIN_NB_NOTES = 20
 OCT_MAX_BAR = 30  # to shorten MIDIs
 
-# For metrics
-CONSISTENCY_WINDOWS_LEN = 16  # in beats
+
+# in case no GPU is available
+if not cuda_available():
+    USE_AMP = USE_CUDA = False
+if USE_CUDA or not mps_available():
+    USE_MPS = False

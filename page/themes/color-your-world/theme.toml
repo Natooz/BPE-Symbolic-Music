@@ -1,0 +1,42 @@
+# theme.toml template for a Hugo theme
+# See https://github.com/gohugoio/hugoThemes#themetoml for an example
+
+name = "Color Your World"
+license = "MIT"
+licenselink = "https://gitlab.com/rmaguiar/hugo-theme-color-your-world/blob/master/LICENSE"
+description = "A minimalist theme for personal blogs with a colored twist."
+
+# The home page of the theme, where the source can be found.
+homepage = "https://gitlab.com/rmaguiar/hugo-theme-color-your-world"
+
+# If you have a running demo of the theme.
+demosite = "https://color-your-world-demo.netlify.app"
+
+tags = [
+  "accessible",
+  "blog",
+  "contact form",
+  "dark",
+  "fast",
+  "highlighting",
+  "light",
+  "minimalist",
+  "modern",
+  "multilingual",
+  "personal",
+  "responsive",
+  "search",
+  "technical"
+]
+
+features = [
+  "dark mode",
+  "noscript",
+  "privacy",
+  "syntax highlighting"
+]
+
+# If the theme has a single author
+[author]
+  name = "rmaguiar"
+  homepage = "https://rmaguiar.keybase.pub"

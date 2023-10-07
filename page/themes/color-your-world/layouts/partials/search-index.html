@@ -1,0 +1,3 @@
+{{ $searchIndex := resources.Get "json/search.json" | resources.ExecuteAsTemplate (printf "%s/index.json" .RelPermalink) . | resources.Fingerprint "md5" }}
+
+{{ return (path.Base $searchIndex.RelPermalink)  }}

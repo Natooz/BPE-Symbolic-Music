@@ -1,0 +1,121 @@
+// Based on Monokai (pygments-high-contrast-stylesheets)
+// Source: https://github.com/mpchadwick/pygments-high-contrast-stylesheets/blob/gh-pages/monokai.css
+
+.chroma,
+pre,
+p code,
+li code {
+  color: #f8f8f2;
+  background: #272822;
+}
+
+.chroma .err {
+  color: #eb0083;
+  background-color: #1e0010;
+}
+
+.chroma .lntd {
+  vertical-align: top;
+  padding: 0;
+  margin: 0;
+  border: 0;
+}
+
+.chroma .lntable {
+  border-spacing: 0;
+  //padding: 0;
+  margin: 0;
+  border: 0;
+  width: auto;
+  //overflow: auto;
+  display: block;
+}
+
+.chroma .hl {
+  display: block;
+  width: 100%;
+  background-color: rgba(0,0,0,.3);
+}
+
+.chroma .ge {
+	font-style: italic;
+}
+
+.chroma .gs {
+	font-weight: bold;
+}
+
+.chroma .lnt,
+.chroma .ln {
+  margin-right: 0.5rem;
+  padding: 0 0.5rem 0 1.5rem;
+  color: #8e8e8e;
+}
+
+.chroma .k,
+.chroma .kc,
+.chroma .kd,
+.chroma .kp,
+.chroma .kr,
+.chroma .kt,
+.chroma .no {
+  color: #66d9ef;
+}
+
+.chroma .kn,
+.chroma .nt,
+.chroma .o,
+.chroma .ow,
+.chroma .gd {
+  color: #f94e8a;
+}
+
+.chroma .na,
+.chroma .nc,
+.chroma .nd,
+.chroma .ne,
+.chroma .nf,
+.chroma .nx,
+.chroma .gi {
+  color: #a6e22e;
+}
+
+.chroma .l,
+.chroma .se,
+.chroma .m,
+.chroma .mb,
+.chroma .mf,
+.chroma .mh,
+.chroma .mi,
+.chroma .il,
+.chroma .mo {
+  color: #ae81ff;
+}
+
+.chroma .ld,
+.chroma .s,
+.chroma .sa,
+.chroma .sb,
+.chroma .sc,
+.chroma .dl,
+.chroma .sd,
+.chroma .s2,
+.chroma .sh,
+.chroma .si,
+.chroma .sx,
+.chroma .sr,
+.chroma .s1,
+.chroma .ss {
+  color: #e6db74;
+}
+
+.chroma .c,
+.chroma .ch,
+.chroma .cm,
+.chroma .c1,
+.chroma .cs,
+.chroma .cp,
+.chroma .cpf,
+.chroma .gu {
+  color: #949076;
+}

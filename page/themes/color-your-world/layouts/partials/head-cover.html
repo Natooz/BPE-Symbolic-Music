@@ -1,0 +1,79 @@
+{{ $file := .Params.cover }}
+{{ $coverAlt := .Params.coverAlt | default .Site.Params.coverAlt }}
+
+
+<!-- Image processing configuration -->
+{{ $imgProcConfig := partialCached "utilities/image-processing-config" . }}
+
+{{ $resize := $imgProcConfig.autoResize }}
+
+
+<!-- Default image path -->
+{{ $imgPath := .Page.Param "imgPath" }}
+
+{{ if $imgPath }}
+  {{ $file = path.Join $imgPath .Params.cover }}
+{{ end }}
+
+{{ $inputFile := false }}
+
+{{ if and .Site.Params.cover (not .Params.cover) }}
+  {{ $inputFile = resources.Get .Site.Params.cover }}
+{{ else }}
+  {{ $inputFile = .Page.Resources.GetMatch $file }}
+{{ end }}
+
+
+<!-- Avoid trying to convert unsupported formats (GIF, SVG, etc) -->
+{{ $supportedFormats := (slice "jpeg" "png" "tiff") }}
+
+
+<!-- Initialization -->
+{{ $fallbackOptions := false }}
+
+{{ $openGraphImage := false }}
+{{ $twitterImage := false }}
+
+{{ $schemaCover := false }}
+
+
+{{ if and $inputFile $resize }}
+
+  {{ if in $supportedFormats ($inputFile.MediaType.SubType) }}
+
+    <!-- Generate images for Open Graph, Twitter Cards and also Schema -->
+    {{ with $inputFile }}
+
+      <!-- Make sure "tiff" is converted to a format with better support -->
+      {{ if eq .MediaType.SubType "tiff" }}
+        {{ $fallbackOptions = $imgProcConfig.fallbackOptions }}
+      {{ end }}
+
+      {{ $openGraphImage = (.Fill (printf "%s %s" $imgProcConfig.openGraphFillOptions $fallbackOptions)) }}
+      {{ $twitterImage = (.Fill (printf "%s %s" $imgProcConfig.twitterFillOptions $fallbackOptions)) }}
+
+    {{ end }}
+    
+    {{ if and (in .Site.Params.mainSections .Section) (not .Params.sitemapExclude) }}
+      {{ $schemaCover = (slice ($twitterImage.Permalink) ($openGraphImage.Permalink)) }}
+    {{ end }}
+    
+  {{ end }}
+  
+{{ else }}
+
+  {{ with $inputFile }}
+  
+    {{ $openGraphImage = . }}
+    {{ $twitterImage = $openGraphImage }}
+    
+    {{ if and (in $.Site.Params.mainSections $.Section) (not $.Params.sitemapExclude) }}
+      {{ $schemaCover = (slice $inputFile.Permalink) }}
+    {{ end }}
+    
+  {{ end }}
+  
+
+{{ end }}
+
+{{ return (dict "openGraphImage" $openGraphImage "coverAlt" $coverAlt "twitterImage" $twitterImage "schemaCover" $schemaCover) }}

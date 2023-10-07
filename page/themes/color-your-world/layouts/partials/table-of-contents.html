@@ -1,0 +1,9 @@
+{{ if .Params.toc }}
+  <details class="toc" open>
+    <summary class="outline-dashed">
+      {{ T "tableOfContents" }}
+    </summary>
+    
+    {{ .Page.TableOfContents }}
+  </details>
+{{ end }}
