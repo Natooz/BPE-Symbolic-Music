@@ -1,9 +1,0 @@
-/*
-  Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
-  X-Content-Type-Options: nosniff
-  X-XSS-Protection: 1; mode=block
-  Content-Security-Policy: default-src 'self'; frame-ancestors {{ .Site.BaseURL }}; manifest-src 'self'; connect-src 'self'; font-src 'self'; img-src 'self' data:; script-src 'self'; style-src 'self'; base-uri 'self'; object-src 'none'; require-trusted-types-for 'script'; form-action 'self' https://formspree.io
-  X-Frame-Options: SAMEORIGIN
-  Referrer-Policy: strict-origin
-  Permissions-Policy: geolocation=(self)
-  Cache-Control: public, max-age=31536000

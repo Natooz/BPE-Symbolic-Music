@@ -1,2 +1,0 @@
-# 404 redirect for PT pages
-/pt/* /pt/404.html 404
