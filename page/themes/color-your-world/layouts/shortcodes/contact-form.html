@@ -9,38 +9,38 @@
   <label class="label-form">{{ T "name" }}
     <input aria-label="{{ T "name" }}" class="input-text" type="text" name="name" minlength="3" {{ with .Site.Params.Contact.Placeholder.name }}placeholder="{{ . }}"{{ end }} autocomplete="{{ $autoComplete }}" required>
   </label>
-
+  
   <label class="label-form">Email<input aria-label="Email" class="input-text" type="email" name="_replyto" {{ with .Site.Params.Contact.Placeholder.email }}placeholder="{{ . }}"{{ end }} autocomplete="{{ $autoComplete }}" required></label>
-
+  
   {{ with .Site.Params.Contact.subject }}
     {{ if gt (len .) 1 }}
       <label class="label-form">{{ T "subject" }}
         <select aria-label="{{ T "subject" }}" class="input-text" name="_subject">
-
+    
           {{ range . }}
             <option>{{ . }}</option>
           {{ end }}
-
+        
         </select>
       </label>
     {{ else }}
       <input type="hidden" name="_subject" value="{{ index . 0 }}" />
     {{ end }}
   {{ else }}
-
+  
     {{ with .Site.Params.Contact.Placeholder.subject }}
       <label class="label-form">{{ T "subject" }}
         <input aria-label="{{ T "subject" }}" class="input-text" type="text" name="_subject" minlength="6" placeholder="{{ . }}" autocomplete="{{ $autoComplete }}" required>
       </label>
     {{ end }}
-
+  
   {{ end }}
-
-
+  
+  
   <label class="label-form">{{ T "message" }}<textarea id="message" aria-label="{{ T "message" }}" class="input-text" rows="6" name="message" {{ with .Site.Params.Contact.messageMinLength | default 140 }}minlength="{{ . }}"{{ end }} {{ with .Site.Params.Contact.Placeholder.message }}placeholder="{{ . }}"{{ end }} required></textarea></label>
-
+  
   <input type="text" name="_gotcha">
-
+  
   <input class="outline-dashed" type="submit" value="{{ T "submit" }}">
 
 </form>

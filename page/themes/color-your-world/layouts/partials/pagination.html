@@ -25,7 +25,7 @@
       <!-- First page. -->
       {{ if ne $pag.PageNumber 1 }}
       <li>
-        <a aria-label="{{ T " ariaGoToFirst class="btn"href="{{ $pag.First.URL }}"" }}">
+        <a class="btn" href="{{ $pag.First.URL }}" aria-label="{{ T "ariaGoToFirst" }}">
           <svg aria-hidden="true">
             <use transform="rotate(180) translate(-18 -18)" xlink:href="{{ $svgBundleLink }}#angle-double-right"/>
           </svg>
@@ -36,8 +36,8 @@
       <!-- Previous page. -->
       {{ if $pag.HasPrev }}
       <li>
-        <a aria-label="{{ T " ariaGoToPrev class="btn"href="{{ $pag.Prev.URL }}"" }}">
-          <svg aria-hidden="true" transform="rotate(180)">
+        <a class="btn" href="{{ $pag.Prev.URL }}" aria-label="{{ T "ariaGoToPrev" }}">
+          <svg transform="rotate(180)" aria-hidden="true">
             <use xlink:href="{{ $svgBundleLink }}#angle-right"/>
           </svg>
         </a>
@@ -91,11 +91,11 @@
 
         <!-- Output page numbers. -->
         {{ if eq $pageNumberFlag true }}
-          <li $pag . end eq if {{{{ }} }}class="current">
+          <li {{ if eq . $pag }}class="current"{{ end }}>
           {{ if eq . $pag }}
             <p>{{ .PageNumber }}</p>
           {{ else }}
-            <a aria-label="{{ T " ariaGoToPage class="btn"href="{{ .URL }}"" . }}" >{{ .PageNumber }}</a>
+            <a class="btn" href="{{ .URL }}" aria-label="{{ T "ariaGoToPage" . }}" >{{ .PageNumber }}</a>
           {{ end }}
           </li>
         {{ end }}
@@ -105,7 +105,7 @@
       <!-- Next page. -->
       {{ if $pag.HasNext }}
       <li>
-        <a aria-label="{{ T " ariaGoToNext class="btn"href="{{ $pag.Next.URL }}"" }}">
+        <a class="btn" href="{{ $pag.Next.URL }}" aria-label="{{ T "ariaGoToNext" }}">
           <svg aria-hidden="true">
             <use xlink:href="{{ $svgBundleLink }}#angle-right"/>
           </svg>
@@ -116,7 +116,7 @@
       <!-- Last page. -->
       {{ if ne $pag.PageNumber $pag.TotalPages }}
       <li>
-        <a aria-label="{{ T " ariaGoToLast class="btn"href="{{ $pag.Last.URL }}"" }}">
+        <a class="btn" href="{{ $pag.Last.URL }}" aria-label="{{ T "ariaGoToLast" }}">
           <svg aria-hidden="true">
             <use xlink:href="{{ $svgBundleLink }}#angle-double-right"/>
           </svg>

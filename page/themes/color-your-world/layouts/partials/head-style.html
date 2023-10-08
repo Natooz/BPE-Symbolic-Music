@@ -1,6 +1,6 @@
 <!-- Main CSS -->
 {{ $main := resources.Get "scss/main.scss" | resources.ExecuteAsTemplate "css/main.scss" . | toCSS | minify | fingerprint }}
-<link crossorigin="anonymous" href="{{ $main.Permalink }}" integrity="{{ $main.Data.Integrity }}" rel="stylesheet">
+<link rel="stylesheet" href="{{ $main.Permalink }}" integrity="{{ $main.Data.Integrity }}" crossorigin="anonymous">
 
 
 <!-- If JS is disabled -->
@@ -12,17 +12,17 @@
   {{ if .Site.Params.Style.ignoreSystemSettings }}
 
     {{ if .Site.Params.Style.isDark }}
-      <meta content="{{ $darkAccent }}" name="theme-color">
+      <meta name="theme-color" content="{{ $darkAccent }}">
     {{ else }}
-      <meta content="{{ $lightAccent }}" name="theme-color">
+      <meta name="theme-color" content="{{ $lightAccent }}">
     {{ end }}
 
   {{ else }}
-    <meta content="{{ $darkAccent }}" media="(prefers-color-scheme: dark)" name="theme-color">
-    <meta content="{{ $lightAccent }}" media="(prefers-color-scheme: light)" name="theme-color">
+    <meta name="theme-color" content="{{ $darkAccent }}" media="(prefers-color-scheme: dark)">
+    <meta name="theme-color" content="{{ $lightAccent }}" media="(prefers-color-scheme: light)">
   {{ end }}
 
   {{ $noscript := resources.Get "scss/noscript.scss" | resources.ExecuteAsTemplate "css/noscript.scss" . | toCSS | minify | fingerprint }}
-  <link crossorigin="anonymous" href="{{ $noscript.Permalink }}" integrity="{{ $noscript.Data.Integrity }}" rel="stylesheet">
+  <link rel="stylesheet" href="{{ $noscript.Permalink }}" integrity="{{ $noscript.Data.Integrity }}" crossorigin="anonymous">
 
 </noscript>

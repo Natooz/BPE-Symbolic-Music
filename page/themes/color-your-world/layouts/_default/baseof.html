@@ -1,7 +1,7 @@
 {{- $svgBundle := partialCached "svg-bundle" . -}}
 
 <!DOCTYPE html>
-<html data-mode="{{ if .Site.Params.Style.isDark }}dark{{ else }}light{{ end }}" lang="{{ .Site.Language.Lang }}">
+<html lang="{{ .Site.Language.Lang }}" data-mode="{{ if .Site.Params.Style.isDark }}dark{{ else }}light{{ end }}">
   <head prefix="og: http://ogp.me/ns#">
     {{ partial "head" . }}
   </head>
@@ -25,7 +25,7 @@
     <!-- Search -->
     {{ if eq .Layout "search" }}
       {{ $searchJS := resources.Get "js/search.js" | resources.ExecuteAsTemplate (print "js/search.js" | relLangURL) . | minify | fingerprint }}
-      <script async crossorigin="anonymous" integrity="{{ $searchJS.Data.Integrity }}" src="{{ $searchJS.Permalink }}" type="module"></script>
+      <script async type="module" src="{{ $searchJS.Permalink }}" integrity="{{ $searchJS.Data.Integrity }}" crossorigin="anonymous"></script>
     {{ end }}
 
     <!-- KaTeX -->

@@ -15,9 +15,9 @@
   {{ if eq .Layout "search" }}
     <form role="search">
   {{ else }}
-    <form action="{{ $searchPage.RelPermalink }}" role="search">
+    <form role="search" action="{{ $searchPage.RelPermalink }}">
   {{ end }}
-      <label class="label-form" for="search-input">{{ T "searchLabel" }}</label><input .Site.Params.Search.placeholder class="input-text" end id="search-input" maxlength="{{ $maxLength }}" minlength="{{ $minLength }}" name="q" pattern="^[\S].*" requiredtitle='{{ T "searchInput" (dict "minLength" $minLength "maxLength" $maxLength) }}' type="search" with {{ {{ }} }}placeholder="{{ . }}"><button aria-label="{{ T "searchAriaButton" }}" class="btn outline-dashed" type="submit"><svg aria-hidden="true"><use xlink:href="{{ $svgBundleLink }}#search"/></svg></button>
+      <label class="label-form" for="search-input">{{ T "searchLabel" }}</label><input class="input-text" type="search" id="search-input" title='{{ T "searchInput" (dict "minLength" $minLength "maxLength" $maxLength) }}' name="q" {{ with .Site.Params.Search.placeholder }}placeholder="{{ . }}"{{ end }} minlength="{{ $minLength }}" maxlength="{{ $maxLength }}" pattern="^[\S].*" required><button aria-label="{{ T "searchAriaButton" }}" class="btn outline-dashed" type="submit"><svg aria-hidden="true"><use xlink:href="{{ $svgBundleLink }}#search"/></svg></button>
     </form>
   <hr>
 </div>

@@ -8,7 +8,7 @@
 {{ $allAccentColors := union (slice $defaultLightAccent $defaultDarkAccent) .Site.Params.Style.presets }}
 
 <div class="req-js">
-  <button changeMode class="outline-dashed"title="{{ T "" }}"><svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><use xlink:href="{{ $svgBundleLink }}#adjust"/></svg></button><input changeAccent class="outline-dashed" list="presets" title="{{ T " type="color"value="{{ if .Site.Params.Style.isDark }}{{ $defaultDarkAccent }}{{ else }}{{ $defaultLightAccent }}{{ end }}"" }}" aria-label="{{ T "changeAccent" }}"><datalist id="presets">{{ range $allAccentColors }}<option value="{{ . }}">{{ end }}</datalist>
+  <button class="outline-dashed" title="{{ T "changeMode" }}"><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><use xlink:href="{{ $svgBundleLink }}#adjust"/></svg></button><input class="outline-dashed" type="color" list="presets" value="{{ if .Site.Params.Style.isDark }}{{ $defaultDarkAccent }}{{ else }}{{ $defaultLightAccent }}{{ end }}" title="{{ T "changeAccent" }}" aria-label="{{ T "changeAccent" }}"><datalist id="presets">{{ range $allAccentColors }}<option value="{{ . }}">{{ end }}</datalist>
 </div>
 
 <!-- noscript notice -->

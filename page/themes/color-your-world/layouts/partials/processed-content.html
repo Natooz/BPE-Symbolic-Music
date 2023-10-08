@@ -56,20 +56,20 @@
 
 
 <!-- Replace the inline "padding:0" present if using the default Chroma -->
-{{ $highlightPadding := `(?:(<div class="highlight">(?:.|\n)+?<table $tweakedHighlightPadding (?:.*?))(?:padding:0))`
+{{ $highlightPadding := `(?:(<div class="highlight">(?:.|\n)+?<table (?:.*?))(?:padding:0))` }}
 
-:= printf {{ }} "${1}padding: var(--il-pad)" }}
+{{ $tweakedHighlightPadding := printf "${1}padding: var(--il-pad)" }}
 
 
 <!-- Replace the footnote return links with a text label -->
-{{ $footnoteReturnLink := `(<a (?:.*) (?:.*) class="footnote-backref">)(?:.*)(</a>)` }}
+{{ $footnoteReturnLink := `(<a (?:.*) class="footnote-backref" (?:.*)>)(?:.*)(</a>)` }}
 
 {{ $improvedFootnoteReturnLink := printf `${1}%s${2}` (T "return") }}
 
 
 <!-- OR replace the footnote return links with a SVG icon -->
 {{ if .Site.Params.Style.hasIconAsFootnoteReturnLink }}
-  {{ $improvedFootnoteReturnLink = printf `${1}<svg aria-hidden="true" transform="rotate(180) translate(0 -1)"><use xlink:href="%s#caret-down"/></svg>${2}` $svgBundleLink }}
+  {{ $improvedFootnoteReturnLink = printf `${1}<svg transform="rotate(180) translate(0 -1)" aria-hidden="true"><use xlink:href="%s#caret-down"/></svg>${2}` $svgBundleLink }}
 {{ end }}
 
 

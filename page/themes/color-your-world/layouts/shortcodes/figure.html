@@ -63,19 +63,19 @@
           {{ end }}
           {{ with $altText }}alt="{{ . }}"{{ end }}
         >
-
+        
       </picture>
-
+      
       {{ with $caption }}
         <figcaption>{{ . }}</figcaption>
       {{ end }}
     </figure>
-
+    
   {{ else }}
 
     <!-- Avoid trying to get width and height from SVG files -->
     {{ if .input }}
-
+    
       <figure>
         <img
           {{ with $class }}class="{{ . }}"{{ end }}
@@ -93,12 +93,12 @@
         <figcaption>{{ . }}</figcaption>
       {{ end }}
       </figure>
-
+      
     {{ else }}
-
+    
       <!-- If local file isn't found, assume it's a remote file -->
       {{ with ($destination | safeURL) }}
-
+      
       <figure>
         <img
           {{ with $class }}class="{{ . }}"{{ end }}
@@ -106,7 +106,7 @@
           src="{{ . }}"
           {{ with $altText }}alt="{{ . }}"{{ end }}
         >
-
+        
         {{ with $caption }}
           <figcaption>{{ . }}</figcaption>
         {{ end }}
@@ -115,5 +115,5 @@
     {{ end }}
 
   {{ end }}
-
+  
 {{ end }}

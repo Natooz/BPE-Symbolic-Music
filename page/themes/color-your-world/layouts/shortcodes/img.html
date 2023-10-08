@@ -62,7 +62,7 @@
         {{ end }}
         {{ with $altText }}alt="{{ . }}"{{ end }}
       >
-
+      
     </picture>
 
   {{ else }}
@@ -82,7 +82,7 @@
         {{ with $altText }}alt="{{ . }}"{{ end }}
       >
     {{ else }}
-
+    
       <!-- If local file isn't found, assume it's a remote file -->
       {{ with ($destination | safeURL) }}
         <img
@@ -95,5 +95,5 @@
     {{ end }}
 
   {{ end }}
-
+  
 {{ end }}

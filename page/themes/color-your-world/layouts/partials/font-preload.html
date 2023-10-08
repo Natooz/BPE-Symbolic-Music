@@ -4,5 +4,5 @@
 -->
 
 {{- range (resources.Match "fonts/*") -}}
-  <link as="font" crossorigin="anonymous" href="{{ .RelPermalink }}" rel="preload">
+  <link rel="preload" href="{{ .RelPermalink }}" as="font" crossorigin="anonymous">
 {{ end -}}

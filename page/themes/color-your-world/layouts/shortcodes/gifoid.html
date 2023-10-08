@@ -68,6 +68,6 @@
   {{ range sort $filesData "size" }}
     <source src="{{ .source }}" type="{{ .mediaType }}">
   {{ end }}
-
+  
   <p class="error">{{ T "missingCodec" }}</p>
 </video>

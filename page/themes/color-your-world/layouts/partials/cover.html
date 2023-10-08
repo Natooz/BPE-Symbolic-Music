@@ -39,13 +39,13 @@
       >
       
       <img
-        $altText
-        .default class="cover" end end
-          height="{{ .Height }}"
+        class="cover"
+        {{ with .default }}
           src="{{ .RelPermalink }}"
           width="{{ .Width }}"
-        with with {{
-        {{ {{ {{ }}}} }} }}alt="{{ . }}"
+          height="{{ .Height }}"
+        {{ end }}
+        {{ with $altText }}alt="{{ . }}"{{ end }}
       >
       
     </picture>
@@ -55,10 +55,10 @@
     <!-- Avoid trying to get width and height from SVG files -->
     {{ if .input }}
       <img
-        .MediaType.SubType
-        .input class="cover" if ne
+        class="cover"
+        {{ with .input }}
           src="{{ .RelPermalink }}"
-          with {{ {{ }} "svg" }}
+          {{ if ne .MediaType.SubType "svg" }}
             width="{{ .Width }}"
             height="{{ .Height }}"
           {{ end }}
@@ -70,9 +70,9 @@
       <!-- If local file isn't found, assume it's a remote file -->
       {{ with ($destination | safeURL) }}
         <img
-          $altText
           class="cover"
-          end src="{{ . }}" with {{{{ }} }}alt="{{ . }}"
+          src="{{ . }}"
+          {{ with $altText }}alt="{{ . }}"{{ end }}
         >
       {{ end }}
     {{ end }}
