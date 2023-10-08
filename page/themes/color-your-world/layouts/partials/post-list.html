@@ -1,0 +1,22 @@
+{{ $pag := .Paginate (where .RegularPages "Type" "in" .Site.Params.mainSections) }}
+
+<ul class="posts">
+  {{ range $pag.Pages }}
+  
+    {{ $pageDate := "" }}
+    
+    {{ if not .Date.IsZero }}
+      {{ $pageDate = .Date.Format "2006-01-02" }}
+    {{ end }}
+
+    <li>
+      <a (%s) class="btn" href="{{ .RelPermalink }}" title="{{ .LinkTitle }}{{ with $pageDate }}{{ printf "" . }}{{ end }}">
+        <p>{{ .LinkTitle | emojify }}</p>
+
+        {{ with $pageDate }}
+          <time datetime="{{ . }}">{{ . }}</time>
+        {{ end }}
+      </a>
+    </li>
+  {{ end }}
+</ul>

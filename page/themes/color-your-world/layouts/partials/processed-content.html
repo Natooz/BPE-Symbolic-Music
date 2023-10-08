@@ -1,0 +1,94 @@
+<!--
+  HACK
+  For some reason, Chrome will ignore some elements when using TAB
+  (while Firefox will not). Since Chrome is used by the majority,
+  I feel like I need to "fix" this.
+  
+  For now, I'll be using "tabindex=0" (even if it makes Firefox
+  complain about accessibility).
+  
+  I'm also taking this as an opportunity to fix other minor details
+  like i18n and responsiveness.
+  
+  ~~Hopefully, most of the mess below can be removed in the future
+  as Hugo evolves and more render hooks are implemented. (I remember
+  about adding anchor links to headings with replaceRE before
+  render hooks were available.)~~
+  
+  I digress.
+  
+  NOTE
+  A while ago I had to update this hack, cuz Hugo 0.86.0 has
+  "tabindex=0" as default. It should still be compatible with
+  0.73.0 and above.
+  
+  Reference:
+  https://github.com/gohugoio/hugo/pull/8568
+  
+  So... this is now a hack to a hack.
+-->
+
+<!-- Get SVG bundle -->
+{{ $svgBundleLink := (partialCached "svg-bundle" .) }}
+
+<!-- i18n -->
+{{ $references    := `(<(?:section|div) class="footnotes" role="doc-endnotes">)` }}
+{{ $seeFootnotes  := `(class="footnote-ref")` }}
+{{ $returnToText  := `(class="footnote-backref")` }}
+
+{{ $translatedReferences    := printf `${1}<h2>%s</h2>` (T "references") }}
+{{ $translatedSeeFootnotes  := printf `${1} title="%s"` (T "seeFootnotes") }}
+{{ $translatedReturnToText  := printf `${1} title="%s"` (T "returnToText") }}
+
+
+<!-- More i18n and also a11y, kind of -->
+{{ $highlightCodeBlock  := `(<div class="highlight"><(?:pre|div))(?:\s*|\stabindex="0") (class="chroma">)` }}
+{{ $indentedCodeBlock   := `(<pre)(?:>*|\stabindex="0">)(<code>)` }}
+
+{{ $labeledHighlightCodeBlock := printf `${1} aria-label="%s" tabindex=0 ${2}` (T "boxContainingCode") }}
+{{ $labeledIndentedCodeBlock  := printf `${1} aria-label="%s" tabindex=0>${2}` (T "boxContainingCode") }}
+
+
+<!-- Wrap tables to make use of overflow-x property (plus the tabindex thing) -->
+{{ $table := `(<table>(?:.|\n)+?</table>)` }}
+
+{{ $improvedTable := printf `<div class="scroll" tabindex="0"> ${1} </div>` }}
+
+
+<!-- Replace the inline "padding:0" present if using the default Chroma -->
+{{ $highlightPadding := `(?:(<div class="highlight">(?:.|\n)+?<table $tweakedHighlightPadding (?:.*?))(?:padding:0))`
+
+:= printf {{ }} "${1}padding: var(--il-pad)" }}
+
+
+<!-- Replace the footnote return links with a text label -->
+{{ $footnoteReturnLink := `(<a (?:.*) (?:.*) class="footnote-backref">)(?:.*)(</a>)` }}
+
+{{ $improvedFootnoteReturnLink := printf `${1}%s${2}` (T "return") }}
+
+
+<!-- OR replace the footnote return links with a SVG icon -->
+{{ if .Site.Params.Style.hasIconAsFootnoteReturnLink }}
+  {{ $improvedFootnoteReturnLink = printf `${1}<svg aria-hidden="true" transform="rotate(180) translate(0 -1)"><use xlink:href="%s#caret-down"/></svg>${2}` $svgBundleLink }}
+{{ end }}
+
+
+<!-- Remove extra tab indexes (see at the top) -->
+{{ $extraTabIndex := `(?:(<td class="lntd">(?:.|\n)+?<pre) tabindex="0" (class="chroma">))` }}
+
+{{ $trimmedExtraTabIndex := printf `${1} ${2}` }}
+
+
+<!--
+  This is doing 6 things right now (or is it):
+  
+  * Adding "tabindex=0" to native table and code fences;
+  * Making tables scrollable;
+  * Localizing some text;
+  * Adding a "h2" to footnotes;
+  * Changing the default inline style for default Chroma;
+  * Removing the "extra" tabindexes in code fences 
+  with line numbers (.lntd > .chroma).
+-->
+
+{{ .Content | replaceRE $table $improvedTable | replaceRE $highlightCodeBlock $labeledHighlightCodeBlock | replaceRE $indentedCodeBlock $labeledIndentedCodeBlock | replaceRE $seeFootnotes $translatedSeeFootnotes | replaceRE $returnToText $translatedReturnToText | replaceRE $references $translatedReferences | replaceRE $footnoteReturnLink $improvedFootnoteReturnLink | replaceRE $highlightPadding $tweakedHighlightPadding | replaceRE $extraTabIndex $trimmedExtraTabIndex | safeHTML }}

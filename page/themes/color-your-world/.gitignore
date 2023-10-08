@@ -1,0 +1,7 @@
+public
+resources
+.DS_Store
+*.bak
+*.kate-swp
+*.lock
+

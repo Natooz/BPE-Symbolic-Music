@@ -1,0 +1,6 @@
+{{ if and (gt (len .Site.Taxonomies.tags) 1) (ne .Section "categories") }}
+  <hr>
+  <h2>{{ T "tags" }}</h2>
+  
+  {{ partialCached "tags" . }}
+{{ end }}

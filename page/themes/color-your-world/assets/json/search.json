@@ -1,0 +1,58 @@
+{{- $stopWords := or .Params.stopWords .Site.Params.Search.stopWords -}}
+
+{{- $pages := where .Site.RegularPages "Type" "in" .Site.Params.mainSections -}}
+{{- $pages = where $pages "Params.noindex" "ne" true -}}
+
+{{- $searchIndex := slice -}}
+
+{{- range $pages -}}
+
+  {{- $date := false -}}
+  {{- $description := false -}}
+  {{- $tags := false -}}
+
+  {{- if not .Date.IsZero -}}
+    {{- $date = (.Date.Format "2006-01-02") -}}
+  {{- end -}}
+
+  {{- if .Description -}}
+    {{- $description = (.Description | emojify) -}}
+  {{- end -}}
+
+  {{- if .Params.tags -}}
+    {{- $tags = .Params.tags -}}
+  {{- end -}}
+
+  {{- $filteredContent := (.Content | replaceRE "<pre(.|\n)+?</pre>" "") -}}
+  {{- $filteredContent = ($filteredContent | replaceRE "<!--(.|\n)+?-->" "") -}}
+  {{- $filteredContent = ($filteredContent | replaceRE "(?s)<p class=\"error\".*?</p>" "") -}}
+  {{- $filteredContent = ($filteredContent | plainify | lower) -}}
+  {{- $filteredContent = ($filteredContent | replaceRE "(&ldquo;|&rdquo;|&rsquo;|&lt;|&gt;|&hellip;)" "") -}}
+  {{- $filteredContent = ($filteredContent | replaceRE "(\n|\r|\t)+" " ") -}}
+  {{- $filteredContent = ($filteredContent | replaceRE "(\\(|\\)|\\[|\\]|\\,|\\:|\\;|\\!|\\?|\"|“|”)" "") -}}
+  {{- $filteredContent = ($filteredContent | replaceRE "(\\. |\\/| +)" " ") -}}
+  {{- $filteredContent = ($filteredContent | replaceRE "&#160&#x21a9&#xfe0e" "") -}}
+  {{- $filteredContent = (trim $filteredContent " ") -}}
+  
+  {{- $words := (split $filteredContent " ") -}}
+  
+  {{- $currentWords := slice -}}
+  
+  
+  {{- range $words -}}
+    {{- $word := . -}}
+    {{- if and (ne (substr $word 0 1) $word) (not (in $stopWords $word)) -}}
+      {{- $currentWords = $currentWords | append $word -}}
+    {{- end -}}
+  {{- end -}}
+  
+  
+  {{- if $currentWords -}}
+    {{- $currentWords = (delimit $currentWords " ") -}}
+  {{- end -}}
+  
+  {{- $searchIndex = $searchIndex | append (dict "title" (.Title | emojify) "date" $date "description" $description "content" $currentWords "permalink" .RelPermalink "tags" $tags) -}}
+
+{{- end -}}
+
+{{- jsonify $searchIndex | replaceRE "false" "null" -}}

@@ -1,0 +1,114 @@
+{{ $inputFile := .input }}
+{{ $resize    := .resize }}
+
+{{ $imgProcConfig := .config }}
+
+
+<!-- Avoid trying to convert unsupported formats (GIF, SVG, etc) -->
+{{ $supportedFormats := (slice "jpeg" "png" "tiff") }}
+
+
+<!-- Initialize -->
+{{ $defaultImage := false }}
+{{ $fallbackOptions := false }}
+
+{{ $outputSetDefault := slice }}
+{{ $outputSetExtra := slice }}
+
+
+<!-- 
+  If resize parameter isn't found, get the default value
+  Accept boolean AND string
+-->
+{{ if and (not $resize) (ne $resize false) }}
+  {{ $resize = $imgProcConfig.autoResize }}
+{{ end }}
+  
+
+<!--
+  Assume file is local if found
+  And again, make sure "false" (string) is also accepted
+-->
+{{ if and $inputFile (in $supportedFormats ($inputFile.MediaType.SubType)) $resize (ne $resize "false") }}
+
+  <!-- Make sure "tiff" is always converted to "jpeg" or "png" -->
+  {{ if eq $inputFile.MediaType.SubType "tiff" }}
+    {{ $fallbackOptions = $imgProcConfig.fallbackOptions }}
+  {{ end }}
+  
+  {{ range $index, $el := $imgProcConfig.sizes }}
+  
+    <!-- Avoid resize images that are too small -->
+    {{ if ge $inputFile.Width .minWidth }}
+    
+      <!-- Each item corresponds to an image file and its size descriptor -->
+      {{ $outputSetDefault = $outputSetDefault | append (printf "%v %v" (($inputFile.Resize (printf "%v %v" .resizeOptions $fallbackOptions)).RelPermalink) .descriptor) }}
+
+      <!-- Use the smallest image size available as the default image -->
+      {{ if (eq $index (sub (len $imgProcConfig.sizes) 1)) }}
+        {{ $defaultImage = ($inputFile.Resize (printf "%v %v" .resizeOptions $fallbackOptions)) }}
+      {{ end }}
+      
+    {{ end }}
+    
+  {{ end }}
+  
+  <!-- Generate extra source sets -->
+  {{ range $imgProcConfig.extraFormats }}
+  
+    <!-- Make sure the Hugo version supports the format -->
+    {{ if (ge hugo.Version .minVersion) }}
+    
+      {{ $formatOptions := .formatOptions }}
+      {{ $currentItems := slice }}
+      
+      {{ range $imgProcConfig.sizes }}
+        {{ if ge $inputFile.Width .minWidth }}
+        
+          <!-- Each item corresponds to an image file and its size descriptor -->
+          {{ $currentItems = $currentItems | append (printf "%v %v" (($inputFile.Resize (printf "%v %v" .resizeOptions $formatOptions)).RelPermalink) .descriptor) }}
+          
+        {{ end }}
+      {{ end }}
+
+      <!-- Append current items and media type -->
+      {{ $outputSetExtra = $outputSetExtra | append (dict "source" $currentItems "mediaType" .mediaType) }}
+      
+    {{ end }}
+  {{ end }}
+  
+  
+  
+  <!--
+    If even the smallest size option available is still
+    bigger than the original image size, make its
+    original size the default size
+  -->
+  {{ if not $defaultImage }}
+  
+    <!-- Reset and reuse -->
+    {{ $outputSetDefault = slice }}
+    {{ $outputSetExtra = slice }}
+    
+    {{ $defaultImage = ($inputFile.Resize (printf "%vx" $inputFile.Width)) }}
+    
+    {{ $outputSetDefault = $outputSetDefault | append $defaultImage.RelPermalink }}
+    
+    {{ range $imgProcConfig.extraFormats }}
+    
+      {{ $formatOptions := .formatOptions }}
+      
+      {{ if (ge hugo.Version .minVersion) }}
+      
+        {{ $currentItem := ($inputFile.Resize (printf "%vx %v" $inputFile.Width $formatOptions)) }}
+
+        <!-- Append current item and media type -->
+        {{ $outputSetExtra = $outputSetExtra | append (dict "source" (slice $currentItem.RelPermalink) "mediaType" .mediaType) }}
+        
+      {{ end }}
+    {{ end }}
+  {{ end }}
+  
+{{ end }}
+
+{{ return (dict "input" $inputFile "default" $defaultImage "sets" (dict "default" $outputSetDefault "extra" $outputSetExtra)) }}

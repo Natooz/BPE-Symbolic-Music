@@ -1,0 +1,5 @@
+<!-- Generate and set the SVG bundle -->
+{{- $svgBundle := resources.Get "svg/bundle.svg" | resources.ExecuteAsTemplate "img/bundle.svg" . | minify | resources.Fingerprint "md5" -}}
+{{- $svgBundleLink := $svgBundle.RelPermalink -}}
+
+{{- return $svgBundleLink -}}

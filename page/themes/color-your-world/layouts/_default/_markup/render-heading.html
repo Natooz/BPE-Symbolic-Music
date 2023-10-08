@@ -1,0 +1,21 @@
+<!--
+  Anchor links for heading
+  Level 2 to 6
+  
+  TODO
+  It looks weird when the heading is also a link,
+  but then that's also true for links in ToCs
+  Not sure how to deal with it
+-->
+
+<!-- Get SVG bundle -->
+{{ $svgBundleLink := (partialCached "svg-bundle" .) }}
+
+
+{{ $anchoredLinkLevels := seq 2 6 }}
+
+{{ if in $anchoredLinkLevels .Level }}
+  <h{{ .Level }} id="{{ .Anchor | safeURL }}">{{ printf `<a class="anchor" href="#%s" title='%s: %s.'><svg aria-hidden="true"><use xlink:href="%s#hashtag"/></svg></a>` (.Anchor | safeURL) (T "anchorFor") (.Text | plainify | safeHTML) ($svgBundleLink) | safeHTML }} {{ .Text | safeHTML }}</h{{ .Level }}> 
+{{ else }}
+  <h{{ .Level }} id="{{ .Anchor | safeURL }}">{{ .Text | safeHTML }}</h{{ .Level }}> 
+{{ end }}

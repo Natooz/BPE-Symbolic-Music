@@ -1,0 +1,169 @@
+# Header & Footer
+
+[ariaMainMenu]
+other = "Menu principal."
+
+[changeAccent]
+other = "Mudar cor de acentuação."
+
+[changeMode]
+other = "Mudar para o modo claro/escuro."
+
+[noscript]
+other = "Não foi possível executar o JavaScript. Alguns recursos foram desativados."
+
+
+# Pages
+
+[anchorFor]
+other = "Âncora para"
+
+[tableOfContents]
+other = "Conteúdo"
+
+[publishedOn]
+other = "Publicado em"
+
+[lastUpdatedOn]
+other = "Última atualização em"
+
+
+# Footnotes
+
+[references]
+other = "Referências"
+
+[seeFootnotes]
+other = "Ver nota no rodapé."
+
+[return]
+other = "Retornar"
+
+[returnToText]
+other = "Retornar ao texto."
+
+
+# Contact form
+
+[name]
+other = "Nome"
+
+[subject]
+other = "Assunto"
+
+[message]
+other = "Mensagem"
+
+[submit]
+other = "Enviar"
+
+
+# List (layout)
+
+[tag]
+other = "Marcador"
+
+[tags]
+other = "Marcadores"
+
+[category]
+other = "Categoria"
+
+[categories]
+other = "Categorias"
+
+[ariaPagination]
+other = "Navegação de paginação."
+
+[ariaGoToPage]
+other = "Ir para a página {{ .PageNumber }}."
+
+[ariaGoToFirst]
+other = "Ir para a primeira página."
+
+[ariaGoToNext]
+other = "Ir para a próxima página."
+
+[ariaGoToPrev]
+other = "Ir para a página anterior."
+
+[ariaGoToLast]
+other = "Ir para a última página."
+
+
+# List (meta tags)
+
+[page]
+other = "página"
+
+[of]
+other = "de"
+
+[posts]
+other = "Postagens"
+
+[postsUnderTag]
+other = "Postagens sob o marcador \"{{ .Title }}\"."
+
+[postsUnderCategory]
+other = "Postagens sob a categoria \"{{ .Title }}\"."
+
+[pageContaining]
+other = "Página contendo"
+
+
+# Search form
+
+[searchLabel]
+other = "Busca"
+
+[searchAriaButton]
+other = "Executar busca."
+
+[searchInput]
+other = "Campo de busca. Aceita de {{ .minLength }} até {{ .maxLength }} caracteres."
+
+
+# Search results page
+
+[searchNoPageFound]
+other = "Nenhuma página encontrada."
+
+[searchResultsFor]
+other = "Resultados para"
+
+[searchOnePageFound]
+other = "Uma página encontrada"
+
+[searchPagesFound]
+other = "páginas encontradas"
+
+[searchProcessing]
+other = "Processando busca..."
+
+[searchAwaitingSearch]
+other = "Aguardando busca."
+
+[searchTooMany]
+other = "Muitas páginas encontradas. Por favor, tente repetir a busca usando outro termo."
+
+
+# Translations
+
+[alsoAvailable]
+other = "Também disponível em"
+
+[and]
+other = " e "
+
+
+# Misc
+
+[missingCodec]
+other = "Seu navegador não suporta áudio/vídeo em HTML5."
+
+[boxContainingCode]
+other = "Caixa contendo amostra de código."
+
+[boxContainingExpression]
+other = "Caixa contendo expressão."

@@ -1,0 +1,83 @@
+{{ $currentHeading := .Title | emojify }}
+{{ $mainTitle := .Params.mainTitle | emojify }}
+
+{{ $titleSeparator := .Site.Params.titleSeparator }}
+
+
+<!-- If 404 page -->
+{{ if (eq .Kind "404") }}
+  
+  {{ $currentHeading = (.Site.Params.notFound.title | default .Site.Data.default.notFound.title) | emojify }}
+
+<!-- If post list -->
+{{ else if (eq .Kind "section") }}
+  
+  {{ if gt .Paginator.TotalPages 1 }}
+    {{ $mainTitle = printf `%v, %v %v %v %v` .Title (T "page") .Paginator.PageNumber (T "of") .Paginator.TotalPages }}
+  {{ end }}
+  
+<!-- If tags/categories list -->
+{{ else if eq .Kind "term" }}
+
+  {{ $currentTerm := false }}
+
+  {{ if eq .Type "tags" }}
+    {{ $currentTerm = (T "tag") }}
+  {{ else }}
+    {{ $currentTerm = (T "category") }}
+  {{ end }}
+  
+  {{ $currentHeading = printf `%v: "%v"` $currentTerm .Title }}
+  
+  {{ with .Paginator }}
+    {{ if gt .TotalPages 1 }}
+      {{ $mainTitle = printf `%v: "%v", %v %v %v %v` $currentTerm $.Title (T "page") .PageNumber (T "of") .TotalPages }}
+    {{ else }}
+      {{ $mainTitle = printf `%v: "%v"` $currentTerm $.Title }}
+    {{ end }}
+  {{ end }}
+
+<!-- If tags/categories page -->
+{{ else if eq .Kind "taxonomy" }}
+
+  {{ if eq .Type "tags" }}
+    {{ $currentHeading = (T "tags") }}
+  {{ else }}
+    {{ $currentHeading = (T "categories") }}
+  {{ end }}
+
+<!-- If home page without content -->
+{{ else if and (.IsHome) (not .Content) }}
+
+  {{ $currentHeading = .Site.Title | emojify }}
+
+{{ end }}
+
+
+{{ $currentDesc := .Params.Description | emojify }}
+
+{{ if .IsHome }}
+  {{ $currentDesc = .Site.Params.description | emojify }}
+{{ else if and (ne .Kind "taxonomy") (eq .Type "tags") (not .Params.description) }}
+  {{ $currentDesc = (T "postsUnderTag" .) }}
+{{ else if and (ne .Kind "taxonomy") (eq .Type "categories") (not .Params.description) }}
+  {{ $currentDesc = (T "postsUnderCategory" .) }}
+{{ else if eq .Kind "taxonomy" }}
+  {{ $currentDesc = printf `%v %v.` (T "pageContaining") $currentHeading }}
+{{ else if (eq .Kind "404") }}
+  {{ $currentDesc = (.Site.Params.notFound.description | default .Site.Data.default.notFound.description) | emojify }}
+{{ end }}
+
+
+{{ $currentTitle := $currentHeading }}
+
+{{ if and $titleSeparator (not .Params.disableTitleSeparator) }}
+  {{ if $mainTitle }}
+    {{ $currentTitle = printf `%v %v %v` $mainTitle $titleSeparator .Site.Title }}
+  {{ else }}
+    {{ $currentTitle = printf `%v %v %v` $currentHeading $titleSeparator .Site.Title }}
+  {{ end }}
+{{ end }}
+
+
+{{ return (dict "heading" $currentHeading "description" $currentDesc "title" $currentTitle) }}

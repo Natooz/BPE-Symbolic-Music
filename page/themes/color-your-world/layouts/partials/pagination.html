@@ -1,0 +1,129 @@
+<!-- Get SVG bundle -->
+{{ $svgBundleLink := (partialCached "svg-bundle" .) }}
+
+
+{{ $pag := .Paginator }}
+
+<!-- Number of links either side of the current page. Default value is 2 -->
+{{ $adjacentLinks := 1 }}
+
+<!-- $maxLinks = ($adjacentLinks * 2) + 1 -->
+{{ $maxLinks := (add (mul $adjacentLinks 2) 1) }}
+
+<!-- $lowerLimit = $adjacentLinks + 1 -->
+{{ $lowerLimit := (add $adjacentLinks 1) }}
+
+<!-- $upperLimit = $pag.TotalPages - $adjacentLinks -->
+{{ $upperLimit := (sub $pag.TotalPages $adjacentLinks) }}
+
+<!-- If there's more than one page. -->
+{{ if gt $pag.TotalPages 1 }}
+
+  <nav aria-label="{{ T "ariaPagination" }}">
+    <ul class="pagination">
+      
+      <!-- First page. -->
+      {{ if ne $pag.PageNumber 1 }}
+      <li>
+        <a aria-label="{{ T " ariaGoToFirst class="btn"href="{{ $pag.First.URL }}"" }}">
+          <svg aria-hidden="true">
+            <use transform="rotate(180) translate(-18 -18)" xlink:href="{{ $svgBundleLink }}#angle-double-right"/>
+          </svg>
+        </a>
+      </li>
+      {{ end }}
+
+      <!-- Previous page. -->
+      {{ if $pag.HasPrev }}
+      <li>
+        <a aria-label="{{ T " ariaGoToPrev class="btn"href="{{ $pag.Prev.URL }}"" }}">
+          <svg aria-hidden="true" transform="rotate(180)">
+            <use xlink:href="{{ $svgBundleLink }}#angle-right"/>
+          </svg>
+        </a>
+      </li>
+      {{ end }}
+    
+      <!-- Page numbers. -->
+      {{ range $pag.Pagers }}
+      
+        {{ $pageNumberFlag := false }}
+        
+        <!-- Advanced page numbers. -->
+        {{ if gt $pag.TotalPages $maxLinks }}
+
+          <!-- Lower limit pages. -->
+          <!-- If the user is on a page which is in the lower limit.  -->
+          {{ if le $pag.PageNumber $lowerLimit }}
+
+            <!-- If the current loop page is less than max_links. -->
+            {{ if le .PageNumber $maxLinks }}
+              {{ $pageNumberFlag = true }}
+            {{ end }}
+
+
+          <!-- Upper limit pages. -->
+          <!-- If the user is on a page which is in the upper limit. -->
+          {{ else if ge $pag.PageNumber $upperLimit }}
+
+            <!-- If the current loop page is greater than total pages minus $maxLinks -->
+            {{ if gt .PageNumber (sub $pag.TotalPages $maxLinks) }}
+              {{ $pageNumberFlag = true }}
+            {{ end }}
+
+
+          <!-- Middle pages. -->
+          {{ else }}
+            
+            {{ if and ( ge .PageNumber (sub $pag.PageNumber $adjacentLinks) ) ( le .PageNumber (add $pag.PageNumber $adjacentLinks) ) }}
+              {{ $pageNumberFlag = true }}
+            {{ end }}
+
+          {{ end }}
+
+        
+        <!-- Simple page numbers. -->
+        {{ else }}
+
+          {{ $pageNumberFlag = true }}
+
+        {{ end }}
+
+        <!-- Output page numbers. -->
+        {{ if eq $pageNumberFlag true }}
+          <li $pag . end eq if {{{{ }} }}class="current">
+          {{ if eq . $pag }}
+            <p>{{ .PageNumber }}</p>
+          {{ else }}
+            <a aria-label="{{ T " ariaGoToPage class="btn"href="{{ .URL }}"" . }}" >{{ .PageNumber }}</a>
+          {{ end }}
+          </li>
+        {{ end }}
+
+      {{ end }}
+
+      <!-- Next page. -->
+      {{ if $pag.HasNext }}
+      <li>
+        <a aria-label="{{ T " ariaGoToNext class="btn"href="{{ $pag.Next.URL }}"" }}">
+          <svg aria-hidden="true">
+            <use xlink:href="{{ $svgBundleLink }}#angle-right"/>
+          </svg>
+        </a>
+      </li>
+      {{ end }}
+
+      <!-- Last page. -->
+      {{ if ne $pag.PageNumber $pag.TotalPages }}
+      <li>
+        <a aria-label="{{ T " ariaGoToLast class="btn"href="{{ $pag.Last.URL }}"" }}">
+          <svg aria-hidden="true">
+            <use xlink:href="{{ $svgBundleLink }}#angle-double-right"/>
+          </svg>
+        </a>
+      </li>
+      {{ end }}
+
+    </ul>
+  </nav>
+{{ end }}

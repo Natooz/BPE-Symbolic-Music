@@ -1,0 +1,41 @@
+// Buttons alike
+@mixin button-like {
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.2),
+    inset 0 -1px 0 rgba(0,0,0,.3);
+}
+
+// Same width and height
+@mixin squared($size) {
+  width: $size;
+  height: $size;
+}
+
+// Letterpress effect
+@mixin letterpress($color) {
+  text-shadow:
+    0 1px 0 $color,
+    1px 0 0 $color;
+}
+
+// Heading scaling
+@mixin heading-scaling($level) {
+  font-size: 1rem + $heading-scaling-factor * (6 - $level);
+}
+
+
+// Responsiveness
+@mixin respond-above($breakpoint) {
+  @media (min-width: ($breakpoint + 1)) {
+    @content;
+  }
+}
+
+// HACK
+// For some reason, Chrome will leave a small gap between the
+// border and the element depending on the resolution
+// The gap can be filled by using "box-shadow" 
+@mixin chrome-border($border-width, $border-color) {
+  border: $border-width solid $border-color;
+  box-shadow: inset 0 0 0 $border-width $border-color;
+}

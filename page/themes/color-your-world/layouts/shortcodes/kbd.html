@@ -1,0 +1,21 @@
+<!--
+  usage:
+    kbd "Ctrl" "Shift" "i"
+  
+  output:
+    Ctrl + Shift + i
+-->
+
+{{ $semanticKeyboardKeys := slice }}
+
+{{ range .Params }}
+  {{ $currentKey := printf "<kbd>%s</kbd>" . }}
+
+  {{ $semanticKeyboardKeys = $semanticKeyboardKeys | append $currentKey }}
+{{ end }}
+
+{{ if gt $semanticKeyboardKeys 1 }}
+  <kbd>{{- delimit $semanticKeyboardKeys "+" -}}</kbd>
+{{ else }}
+  {{- delimit $semanticKeyboardKeys "+" -}}
+{{ end }}

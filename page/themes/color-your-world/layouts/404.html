@@ -1,0 +1,8 @@
+{{ define "main" }}
+
+  <main>
+    <h1>{{ .Site.Params.notFound.title | emojify | default .Site.Data.default.notFound.title }}</h1>
+    <p>{{ .Site.Params.notFound.paragraph | emojify | default .Site.Data.default.notFound.paragraph }}</p>
+  </main>
+
+{{ end }}

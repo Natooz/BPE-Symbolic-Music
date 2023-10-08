@@ -1,0 +1,261 @@
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1" name="viewport">
+<meta content="Hugo {{ hugo.Version }}" name="generator">
+<meta content="Color Your World -- gitlab.com/rmaguiar/hugo-theme-color-your-world" name="theme">
+
+
+<!-- Beginning of the SEO madness -->
+{{- $basicTags := partial "basic-tags" . -}}
+
+<title>{{ $basicTags.title }}</title>
+
+{{ with .Site.Params.author }}<meta content="{{ . }}" name="author">{{ end }}
+{{ with $basicTags.description }}<meta content="{{ . }}" name="description">{{ end }}
+
+
+<meta 404 content="{{ if and (ne .Kind "name="robots"") (ne .Params.noindex true) }}index follow{{ else }}noindex follow{{ end }}">
+
+
+<!-- Canon -->
+{{ if and (.IsPage) (not .Params.sitemapExclude) }}
+  {{ if .Params.canonicalURL }}
+    <link href="{{ .Params.canonicalURL }}" rel="canonical">
+  {{ else if and (ne .Kind "404") (ne .Params.sitemapExclude true) }}
+    <link href="{{ .Permalink }}" rel="canonical">
+  {{ end }}
+{{ else if (eq .Kind "section") }}
+  <link href="{{ .Paginator.URL | absURL }}" rel="canonical">
+  
+  {{ if .Paginator.HasPrev }}
+    <link href="{{ .Paginator.Prev.URL | absURL }}" rel="prev">
+  {{ end }}
+  
+  {{ if .Paginator.HasNext }}
+    <link href="{{ .Paginator.Next.URL | absURL }}" rel="next">
+  {{ end }}
+{{ end }}
+
+
+<!-- If the user wants to add something (custom favicons, fonts, scripts, etc) -->
+{{ if (templates.Exists "partials/custom/head-append.html") }}
+  {{ partial "custom/head-append" . }}
+{{ end }}
+
+
+<!-- Open Graph / Twitter Card -->
+<meta content="{{ .Site.Title }}" property="og:site_name">
+<meta content="{{ $basicTags.heading }}" property="og:title">
+{{ with $basicTags.description }}<meta content="{{ . }}" property="og:description">{{ end }}
+
+{{- if ne .Kind "404" }}
+  <meta content="{{ .Permalink }}" property="og:url">
+{{ end -}}
+
+
+
+<!-- Generate images for Open Graph, Twitter Cards and Schema -->
+{{ $cover := partial "head-cover" . }}
+
+
+{{ with $cover.openGraphImage }}
+  <meta content="{{ .Permalink }}" property="og:image">
+  <meta content="{{ .Width }}" property="og:image:width">
+  <meta content="{{ .Height }}" property="og:image:height">
+{{ end }}
+
+{{ with $cover.coverAlt }}
+  <meta content="{{ . }}" property="og:image:alt">
+{{ end }}
+
+{{ with $cover.twitterImage }}
+  <meta content="summary_large_image" name="twitter:card">
+  <meta content="{{ .Permalink }}" name="twitter:image">
+{{ end }}
+
+
+
+<!-- More social crap -->
+{{ if and (in .Site.Params.mainSections .Section) (.IsPage) (not .Params.sitemapExclude) }}
+  <meta content="article" property="og:type">
+  
+  {{ if not .Date.IsZero }}
+    <meta 2006-01-02 content="{{ .PublishDate.Format "property="article:published_time"" | safeHTML }}">
+    <meta 2006-01-02 content="{{ .Lastmod.Format "property="article:modified_time"" | safeHTML }}">
+    <meta 2006-01-02 content="{{ .Lastmod.Format "property="og:updated_time"" | safeHTML }}">
+  {{ end }}
+
+  {{ with .Params.author }}
+    <meta content="{{ . }}" property="article:author">
+  {{ end }}
+  
+  {{ with .Site.Params.Social.Centralized.twitter }}
+    <meta @%s content="{{ printf "name="twitter:creator"" (index . 0) }}">
+  {{ end}}
+  
+{{ else }}
+  <meta content="website" property="og:type">
+{{ end -}}
+
+{{ with .Site.Params.Social.Centralized.twitter }}
+  <meta @%s content="{{ printf "name="twitter:site"" (index . 0) }}">
+{{ end }}
+
+
+
+{{ with .Site.Params.locale }}
+  <meta content="{{ . }}" property="og:locale">
+{{ end }}
+
+{{ if .Site.Config.Privacy.Twitter.EnableDNT }}
+  <meta content="on" name="twitter:dnt">
+{{ end }}
+
+
+<!-- Feed -->
+{{ with .OutputFormats.Get "RSS" }}
+  <link href="{{ .Permalink }}" rel="alternate" title="{{ $.Site.Title }}" type="application/rss+xml">
+{{ end }}
+
+
+<!-- i18n -->
+{{ if .IsTranslated }}
+  {{ range .Translations }}
+    <link href="{{ .Permalink }}" hreflang="{{ .Language.Lang }}" rel="alternate" title="{{ .Language.LanguageName }}">
+  {{ end }}
+{{ end }}
+
+
+<!-- Will be replaced by JS anyway -->
+<meta content="#222" name="theme-color">
+
+<meta content="yes" name="apple-mobile-web-app-capable">
+<meta content="default" name="apple-mobile-web-app-status-bar-style">
+
+
+<!-- DRY -->
+{{- $centralized   := .Site.Params.Social.Centralized -}}
+{{- $decentralized := .Site.Params.Social.Decentralized -}}
+
+<!-- Generate array with social profiles -->
+{{- $sameAs := slice -}}
+
+{{- if .Site.Params.Social -}}
+  {{- range .Site.Data.social -}}
+
+    {{- $currentEntry  := .entry -}}
+    {{- $currentBase   := .base -}}
+
+    {{- if not .decentralized -}}
+
+      {{- with (index $centralized $currentEntry) -}}
+        {{- $sameAs = $sameAs | append (printf "%s%s" $currentBase (index . 0)) -}}
+      {{- end -}}
+      
+    {{- else -}}
+    
+      {{- if (index $decentralized $currentEntry) -}}
+        {{- range (index $decentralized $currentEntry) -}}
+          {{- $sameAs = $sameAs | append (index . 0) -}}
+        {{- end -}}
+      {{- end -}}
+      
+    {{- end -}}
+
+  {{- end -}}
+{{- end -}}
+
+<!-- Schema Markup / Structured Data -->
+
+<!--
+  TODO
+  The lack of "datePublished" will throw an error,
+  but I don't know if leaving it as "0001-01-01" is any better.
+  
+  Also, there's something wrong with the Google's validation tool.
+  It's ignoring the "Person" type for https://schema.org/publisher.
+  
+  Reference: https://www.drupal.org/project/schema_metatag/issues/3097526
+-->
+
+{{ if and (in .Site.Params.mainSections .Section) (.IsPage) (not .Params.sitemapExclude) }}
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Article",
+      "mainEntityOfPage": {
+        "@type": "WebSite",
+        "@id": {{ .Site.BaseURL }}
+      },
+      "headline": {{ $basicTags.heading }},
+      "description": {{ $basicTags.description }},
+      {{ with $cover.schemaCover }}"image": {{ . }},{{ end }}
+      "url": {{ .Permalink }},
+      "inLanguage": "{{ .Site.Language.Lang }}",
+      {{ with .PublishDate }}"datePublished": "{{ .Format "2006-01-02" | safeHTML }}",{{ end }}
+      {{ with .Lastmod }}"dateModified": "{{ .Format "2006-01-02" | safeHTML }}",{{ end }}
+      "wordCount" : "{{ .WordCount }}",
+      "publisher": {
+        "@type": "Person",
+        "name": "{{ .Site.Params.author }}"
+      },
+      "author": {
+        "@type": "Person",
+        "name": "{{ .Site.Params.author }}",
+        {{ with .Site.Params.authorDesc }}"description": {{ . }},{{ end }}
+        {{ if gt (len $sameAs) 0 }}"sameAs": {{ $sameAs }}{{ end }}
+      }
+    }
+  </script>
+{{ else }}
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "url": {{ .Site.BaseURL }},
+      "inLanguage": "{{ .Site.Language.Lang }}",
+      "name": {{ .Site.Title }},
+      "description": {{ .Site.Params.description | emojify }},
+      "publisher": "{{ .Site.Params.author }}"
+    }
+  </script>
+{{ end }}
+
+
+<!-- Cached style -->
+{{ partialCached "head-style" . }}
+
+<!-- Preload fonts -->
+{{ partialCached "font-preload" . }}
+
+{{ if or .Params.katex .Site.Params.katex .Params.math .Site.Params.math }}
+  {{ partialCached "katex-font-preload" . }}
+{{ end }}
+
+
+<!-- Preload search index -->
+{{ if eq .Layout "search" }}
+  {{ $searchIndexLink := partialCached "search-index" . }}
+  <link as="fetch" crossorigin="anonymous" href="{{ $searchIndexLink }}" rel="preload">
+{{ end }}
+
+
+<!--
+  rel="me"
+  Not even sure how useful is this nowdays,
+  but since it's easy to implement...
+-->
+
+{{- range $sameAs -}}
+  <link href="{{ . }}" rel="me">
+{{ end -}}
+
+
+<!-- Main JS -->
+{{ $mainJS := resources.Get "js/main.js" | resources.ExecuteAsTemplate "js/main.js" . | minify | fingerprint }}
+
+<!-- Use ESBuild if available -->
+{{ if ge hugo.Version "0.74" }}  
+  {{ $mainJS = resources.Get "js/main.js" | resources.ExecuteAsTemplate "js/main.js" . | js.Build (dict "minify" "true") | fingerprint }}
+{{ end }}
+
+<script crossorigin="anonymous" integrity="{{ $mainJS.Data.Integrity }}" src="{{ $mainJS.Permalink }}"></script>

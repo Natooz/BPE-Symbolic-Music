@@ -1,0 +1,8 @@
+<!--
+  abbr "idk" "I don't know"
+-->
+
+{{- $abbr    := (.Get 0) -}}
+{{- $title   := (.Get 1) -}}
+
+<abbr title="{{ $title }}">{{ $abbr }}</abbr>
