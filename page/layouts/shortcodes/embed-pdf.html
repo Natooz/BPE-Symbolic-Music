@@ -1,7 +1,6 @@
 {{- if not ($.Page.Scratch.Get "embed-pdf-count") -}}
 
-<script type="text/javascript" src= '/BPE-Symbolic-Music/js/pdf-js/build/pdf.js'></script>
-<!-- <script type="text/javascript" src='{{"/js/pdf-js/build/pdf.js" | relURL}}'></script> -->
+<script src="https://cdn.jsdelivr.net/npm/pdfjs-dist@3.4.120/build/pdf.min.js" integrity="sha256-UZQVSEoMbJ82/3uFjt4mYOTVVHIImtkp7u3L6LMH6/Y=" crossorigin="anonymous"></script>
 
 <style>
   #embed-pdf-container {
@@ -29,7 +28,7 @@
   }
 
 
-  .pdf-loadingWrapper {
+  #loadingWrapper {
     display: none;
     justify-content: center;
     align-items: center;
@@ -37,7 +36,7 @@
     height: 350px;
   }
 
-  .pdf-loading {
+  #loading {
     display: inline-block;
     width: 50px;
     height: 50px;
@@ -65,7 +64,7 @@
     color: #000;
     margin: auto;
     background-color: #eeeeee;
-    padding: 0.3em 1em;
+    padding: 0.2em 0.6em;
     border: solid 2px;
     border-radius: 12px;
     border-color: #00000030;
@@ -73,8 +72,8 @@
   }
 
   #overlayText svg {
-    height: clamp(1em, 2vw, 1.4em);
-    width:  clamp(1em, 2vw, 1.4em);
+    height: clamp(0.6em, 2vw, 1em);
+    width:  clamp(0.6em, 2vw, 1em);
   }
 
 
@@ -92,9 +91,8 @@
 <div class="embed-pdf-container" id="embed-pdf-container-{{ substr (.Get "url" | md5) 0 8 }}">
     <div class="pdf-loadingWrapper" id="pdf-loadingWrapper-{{ substr (.Get "url" | md5) 0 8 }}">
         <div class="pdf-loading" id="pdf-loading-{{ substr (.Get "url" | md5) 0 8 }}"></div>
-    </div>
-    <div id="overlayText">
-      <a href="{{ .Get "url" }}" aria-label="Download" download>
+    </div><div id="overlayText">
+      <a title="Download this PDF" href="{{ .Get "url" }}" aria-label="Download" download>
         <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 18 18">
             <path d="M9 13c.3 0 .5-.1.7-.3L15.4 7 14 5.6l-4 4V1H8v8.6l-4-4L2.6 7l5.7 5.7c.2.2.4.3.7.3zm-7 2h14v2H2z" />
         </svg>
@@ -129,7 +127,7 @@ View the PDF file <a class="pdf-source" id="pdf-source-noscript-{{ substr (.Get 
 
     // The workerSrc property shall be specified.
     if (pdfjsLib.GlobalWorkerOptions.workerSrc == '')
-      pdfjsLib.GlobalWorkerOptions.workerSrc = "{{.Site.BaseURL}}" + 'js/pdf-js/build/pdf.worker.js';
+      pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdn.jsdelivr.net/npm/pdfjs-dist@3.4.120/build/pdf.worker.min.js';
 
     // Change the Scale value for lower or higher resolution.
     var pdfDoc = null,
