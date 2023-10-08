@@ -1,6 +1,6 @@
 {{- if not ($.Page.Scratch.Get "embed-pdf-count") -}}
 
-<script src= '/bpe-symbolic-music/js/pdf-js/build/pdf.js' type="text/javascript"></script>
+<script type="text/javascript" src= '/bpe-symbolic-music/js/pdf-js/build/pdf.js'></script>
 <!-- <script type="text/javascript" src='{{"/js/pdf-js/build/pdf.js" | relURL}}'></script> -->
 
 <style>
@@ -11,7 +11,7 @@
     min-height: 20vh;
     /* overflow-y:scroll; */
   }
-  
+
   .pdf-canvas {
     border: 1px solid black;
     direction: ltr;
@@ -19,7 +19,7 @@
     height: auto;
     display: none;
   }
-  
+
   #the-canvas {
     border: 1px solid black;
     direction: ltr;
@@ -27,8 +27,8 @@
     height: auto;
     display: none;
   }
-  
-  
+
+
   .pdf-loadingWrapper {
     display: none;
     justify-content: center;
@@ -36,7 +36,7 @@
     width: 100%;
     height: 350px;
   }
-  
+
   .pdf-loading {
     display: inline-block;
     width: 50px;
@@ -47,17 +47,17 @@
     animation: spin 1s ease-in-out infinite;
     -webkit-animation: spin 1s ease-in-out infinite;
   }
-  
+
   {{/*  Download link  */}}
-  
-  
-  
+
+
+
   #overlayText {
     word-wrap: break-word;
     display: grid;
     justify-content: end;
   }
-  
+
   #overlayText a {
     position: relative;
     top: 10px;
@@ -71,14 +71,14 @@
     border-color: #00000030;
     text-decoration: none;
   }
-  
+
   #overlayText svg {
     height: clamp(1em, 2vw, 1.4em);
     width:  clamp(1em, 2vw, 1.4em);
   }
-  
-  
-  
+
+
+
   @keyframes spin {
     to { -webkit-transform: rotate(360deg); }
   }
@@ -95,7 +95,7 @@
     </div>
     <div id="overlayText">
       <a href="{{ .Get "url" }}" aria-label="Download" download>
-        <svg aria-hidden="true" viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg">
+        <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 18 18">
             <path d="M9 13c.3 0 .5-.1.7-.3L15.4 7 14 5.6l-4 4V1H8v8.6l-4-4L2.6 7l5.7 5.7c.2.2.4.3.7.3zm-7 2h14v2H2z" />
         </svg>
       </a>
