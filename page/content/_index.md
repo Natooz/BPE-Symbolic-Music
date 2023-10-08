@@ -10,9 +10,8 @@ toc : True
 
 Welcome to the demo website of the paper "Byte Pair Encoding for Symbolic Music" (EMNLP 2023).
 
-[Paper](https://arxiv.org/abs/2301.11975)
-
-[Github](https://github.com/Natooz/BPE-Symbolic-Music)
+[[Paper](https://arxiv.org/abs/2301.11975)]
+[[Github](https://github.com/Natooz/BPE-Symbolic-Music)]
 
 ### BPE
 
