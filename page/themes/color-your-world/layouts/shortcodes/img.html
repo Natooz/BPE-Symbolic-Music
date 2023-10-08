@@ -53,16 +53,16 @@
       >
       
       <img
-        $altText $class .default endend end height="{{ .Height }}"
+        {{ with $class }}class="{{ . }}"{{ end }}
         loading="lazy"
-        src="{{ .RelPermalink }}" width="{{ .Width }}" with with
-          with
-          {{
-          {{
-        {{ {{ {{
-        {{ }} }} }}}} }}alt="{{ . }}" }}class="{{ . }}"
+        {{ with .default }}
+          src="{{ .RelPermalink }}"
+          width="{{ .Width }}"
+          height="{{ .Height }}"
+        {{ end }}
+        {{ with $altText }}alt="{{ . }}"{{ end }}
       >
-      
+
     </picture>
 
   {{ else }}
@@ -70,11 +70,11 @@
     <!-- Avoid trying to get width and height from SVG files -->
     {{ if .input }}
       <img
-        $class .MediaType.SubType .input endif loading="lazy" ne
-        src="{{ .RelPermalink }}"
-        with with {{ {{
-          {{
-          {{ }} }} }}class="{{ . }}" "svg" }}
+        {{ with $class }}class="{{ . }}"{{ end }}
+        loading="lazy"
+        {{ with .input }}
+          src="{{ .RelPermalink }}"
+          {{ if ne .MediaType.SubType "svg" }}
             width="{{ .Width }}"
             height="{{ .Height }}"
           {{ end }}
@@ -82,18 +82,18 @@
         {{ with $altText }}alt="{{ . }}"{{ end }}
       >
     {{ else }}
-    
+
       <!-- If local file isn't found, assume it's a remote file -->
       {{ with ($destination | safeURL) }}
         <img
-          $altText $class end endloading="lazy" src="{{ . }}" with
-          with
-          {{
-          {{ {{ {{ }}}} }}alt="{{ . }}" }}class="{{ . }}"
+          {{ with $class }}class="{{ . }}"{{ end }}
+          loading="lazy"
+          src="{{ . }}"
+          {{ with $altText }}alt="{{ . }}"{{ end }}
         >
       {{ end }}
     {{ end }}
 
   {{ end }}
-  
+
 {{ end }}
