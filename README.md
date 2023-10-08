@@ -1,7 +1,8 @@
 # Byte Pair Encoding for Symbolic Music (EMNLP 2023)
 
 [Paper](https://arxiv.org/abs/2301.11975)
-[Demo website](https://Natooz.github.io/bpe-symbolic-music/)
+
+[Companion website](https://Natooz.github.io/bpe-symbolic-music/)
 
 Byte Pair Encoding (BPE) is a compression technique that allows to reduce the sequence length of a corpus by iteratively replacing the most recurrent byte successions by newly created symbols. It is widely used in NLP, as it allows to automatically create vocabularies made of words or parts of words.
 

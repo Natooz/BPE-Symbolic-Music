@@ -8,7 +8,11 @@ toc : True
 
 <!-- Feel free to check the [posts](/posts) to see some of the theme features. -->
 
-Welcome to the demo website of the paper "Byte Pair Encoding for Symbolic Music".
+Welcome to the demo website of the paper "Byte Pair Encoding for Symbolic Music" (EMNLP 2023).
+
+[Paper](https://arxiv.org/abs/2301.11975)
+
+[Github](https://github.com/Natooz/BPE-Symbolic-Music)
 
 ### BPE
 
@@ -17,8 +21,17 @@ Welcome to the demo website of the paper "Byte Pair Encoding for Symbolic Music"
 BPE is nowadays largely used in the NLP field as it allows to [encode rare words and segmenting unknown or composed words as sequences of sub-word units](https://aclanthology.org/P16-1162/). Other token aggregation, or vocabulary building techniques exist. The two other most commonly used are [Unigram](https://aclanthology.org/P18-1007/) or [WordPiece](https://arxiv.org/abs/1609.08144), which operations share similarities with BPE.
 
 For natural language, bytes are the distinct characters composing the text. Its application to symbolic music has however not yet been studied.
-For symbolic music, the "bytes" are considered as the distinct note and time attributes in this paper. In this context, BPE can allow to represent a note, or even a succession of notes, that is very recurrent in the dataset, as a single token. For instance, a note that would be tokenized as the succession of tokens ``Pitch_D3``, ``Velocity_60``, ``Duration_2.0`` could be replaced by a single new one.
+For symbolic music, the "bytes" can be seen as the distinct note and time attributes in this paper. In this context, BPE can allow to represent a note, or even a succession of notes, that is very recurrent in the dataset, as a single token. For instance, a note that would be tokenized as the succession of tokens ``Pitch_D3``, ``Velocity_60``, ``Duration_2.0`` could be replaced by a single new one.
 Rare note (and attributes) can still be tokenized as non-BPE tokens. The same logic applies to time tokens, that can also be associated to note tokens.
+
+In this paper, we show that BPE can address two main concerns about how symbolic music was previously tokenized:
+
+1. The fairly long sequence length resulting by using one token per note attribute (e.g. pitch, duration) and time events. Long sequences is problematic as the time and space complexity of Transformer models grows quadratically with the input sequence.
+2. The poor usage of the model's embedding space. Language models first project tokens into a learned embedding space, in which the embeddings (continuous representations of the tokens) are learnt to represent their semantic information. This is an essential feature of such models, as it allows them to capture the meaning of the tokens and data. In symbolic music, the tokens usually only represent note attribute values or time values, which do not carry much information other than their absolute value. And vocabularies range often between 200 and 500 tokens, which are then represented on 512 to 1024 dimensions. In such conditions, the embedding space is misused and the potential of the model is poorly exploited.
+
+When applied on symbolic music, BPE will allow to drastically reduce the sequence length, while creating new tokens that can represent whole notes, and sequences of notes. The model's efficiency is then greatly improved, while bringing more information per tokens. It greatly improves the quality of generation, while improving up to three times the inference speed.
+
+BPE is fully implemented within [MidiTok](https://github.com/Natooz/MidiTok), allowing you to easily benefit from this method on top of most of the existing tokenizations.
 
 ## Main results
 
@@ -180,3 +193,22 @@ Recall: **tracks corresponds by order to: no BPE, BPE 1k, BPE 5k, BPE 10k, BPE 2
 {{< audio src="audio_remi/54_7.mp3">}}
 {{< audio src="audio_remi/54_8.mp3">}}
 {{< audio src="audio_remi/54_9.mp3">}}
+
+## Citation
+
+(ACL url/doi/pages will be added once the proceeding will be published)
+```bibtex
+@inproceedings{bpe-symbolic-music,
+    title = "Byte Pair Encoding for Symbolic Music",
+    author = "Fradet, Nathan  and
+      Gutowski, Nicolas  and
+      Chhel, Fabien  and
+      Briot, Jean-Pierre",
+    booktitle = "Proceedings of the 2023 Conference on Empirical Methods in Natural Language Processing",
+    month = dec,
+    year = "2023",
+    address = "Singapore",
+    publisher = "Association for Computational Linguistics",
+    url = "https://arxiv.org/abs/2301.11975",
+}
+```
