@@ -1,4 +1,4 @@
-baseURL = "/bpe-symbolic-music"
+baseURL = "/BPE-Symbolic-Music"
 languageCode = "en"
 title = "Byte Pair Encoding for Symbolic Music"
 theme = ["hugo-embed-pdf-shortcode", "color-your-world"]
