@@ -2,6 +2,10 @@
 
 [[Paper](https://arxiv.org/abs/2301.11975)]
 [[Companion website](https://Natooz.github.io/BPE-Symbolic-Music/)]
+[[🤗 TSD 20k](https://huggingface.co/Natooz/Maestro-TSD-bpe20k)]
+[[🤗 REMI 20k](https://huggingface.co/Natooz/Maestro-REMI-bpe20k)]
+
+## Intro
 
 Byte Pair Encoding (BPE) is a compression technique that allows to reduce the sequence length of a corpus by iteratively replacing the most recurrent byte successions by newly created symbols. It is widely used in NLP, as it allows to automatically create vocabularies made of words or parts of words.
 
@@ -15,6 +19,8 @@ When applied on symbolic music, BPE will allow to drastically reduce the sequenc
 BPE is fully implemented within [MidiTok](https://github.com/Natooz/MidiTok), allowing you to easily benefit from this method on top of most of the existing tokenizations.
 
 We invite you to read the paper, and check our [companion website](https://Natooz.github.io/bpe-symbolic-music/) to listen generated results!
+
+Finally, the best models are shared on Hugging Face: [TSD 20k](https://huggingface.co/Natooz/Maestro-TSD-bpe20k) and [REMI 20k](https://huggingface.co/Natooz/Maestro-REMI-bpe20k)
 
 ## Steps to reproduce
 
