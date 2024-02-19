@@ -44,11 +44,16 @@ Finally, the best models are shared on Hugging Face: [TSD 20k](https://huggingfa
       Gutowski, Nicolas  and
       Chhel, Fabien  and
       Briot, Jean-Pierre",
+    editor = "Bouamor, Houda  and
+      Pino, Juan  and
+      Bali, Kalika",
     booktitle = "Proceedings of the 2023 Conference on Empirical Methods in Natural Language Processing",
     month = dec,
     year = "2023",
     address = "Singapore",
     publisher = "Association for Computational Linguistics",
-    url = "https://arxiv.org/abs/2301.11975",
+    url = "https://aclanthology.org/2023.emnlp-main.123",
+    doi = "10.18653/v1/2023.emnlp-main.123",
+    pages = "2001--2020",
 }
 ```
