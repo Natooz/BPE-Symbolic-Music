@@ -36,7 +36,6 @@ Finally, the best models are shared on Hugging Face: [TSD 20k](https://huggingfa
 
 ## Citation
 
-(ACL url/doi/pages will be added once the proceeding will be published)
 ```bibtex
 @inproceedings{bpe-symbolic-music,
     title = "Byte Pair Encoding for Symbolic Music",
