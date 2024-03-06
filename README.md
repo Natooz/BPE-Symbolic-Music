@@ -18,7 +18,7 @@ When applied on symbolic music, BPE will allow to drastically reduce the sequenc
 
 BPE is fully implemented within [MidiTok](https://github.com/Natooz/MidiTok), allowing you to easily benefit from this method on top of most of the existing tokenizations.
 
-We invite you to read the paper, and check our [companion website](https://Natooz.github.io/bpe-symbolic-music/) to listen generated results!
+We invite you to read the paper, and check our [companion website](https://Natooz.github.io/BPE-Symbolic-Music/) to listen generated results!
 
 Finally, the best models are shared on Hugging Face: [TSD 20k](https://huggingface.co/Natooz/Maestro-TSD-bpe20k) and [REMI 20k](https://huggingface.co/Natooz/Maestro-REMI-bpe20k)
 
